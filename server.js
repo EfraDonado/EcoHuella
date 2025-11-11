@@ -1,3 +1,4 @@
+// servidor principal y dependencias
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
@@ -6,6 +7,8 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Configuración del pool de conexiones a PostgreSQL.
+// Las variables vienen de .env (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, PGSSLMODE)
 const pool = new Pool({
   host: process.env.PGHOST,
   port: process.env.PGPORT,
@@ -15,16 +18,29 @@ const pool = new Pool({
   ssl: process.env.PGSSLMODE ? { rejectUnauthorized: false } : false
 });
 
+// apartado: manejo de errores del pool (cliente idle)
+pool.on('error', (err) => {
+  console.error('Error inesperado en cliente idle del pool:', err);
+});
+
 app.use(cors());
 app.use(express.json());
 
+// apartado: registro de cada petición (logger)
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 // Devuelve puntos, retos y premios juntos para que el frontend los muestre sin trabajo extra.
 async function loadProgress(client, userId) {
+  // apartado: consulta user_points
   const pointsResult = await client.query(
     'SELECT total_points, updated_at FROM user_points WHERE user_id = $1 LIMIT 1',
     [userId]
   );
 
+  // apartado: consulta user_challenges
   const challengesResult = await client.query(
     `SELECT challenge_code AS code, points, completed_at
      FROM user_challenges
@@ -33,6 +49,7 @@ async function loadProgress(client, userId) {
     [userId]
   );
 
+  // apartado: consulta user_rewards
   const rewardsResult = await client.query(
     `SELECT reward_code AS code, reward_name AS name, cost, redeemed_at
      FROM user_rewards
@@ -57,6 +74,7 @@ app.get('/api/health', (req, res) => {
 
 app.post('/api/users', async (req, res) => {
   const { name, email, password } = req.body;
+  // apartado: datos para crear usuario
 
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Por favor envía nombre, correo y contraseña.' });
@@ -72,6 +90,9 @@ app.post('/api/users', async (req, res) => {
 
     const user = nuevoUsuario.rows[0];
 
+  // apartado: registro en logs de usuario creado (sin contraseña)
+  console.log('Usuario creado:', { id: user.id, name: user.name, email: user.email });
+
     await pool.query(
       `INSERT INTO user_points (user_id, total_points)
        VALUES ($1, 0)
@@ -81,18 +102,22 @@ app.post('/api/users', async (req, res) => {
 
     res.status(201).json(user);
   } catch (error) {
+    // apartado de error para fallo al guardar usuario
     console.error('Error guardando usuario:', error);
 
+    // apartado de error para correo ya registrado
     if (error.code === '23505') {
       return res.status(409).json({ error: 'Ese correo ya está registrado.' });
     }
 
+    // apartado de error general: no se pudo guardar
     res.status(500).json({ error: 'No se pudo guardar el usuario.' });
   }
 });
 
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
+  // apartado: datos para login
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Envía tu correo y contraseña.' });
@@ -105,11 +130,13 @@ app.post('/api/login', async (req, res) => {
     );
 
     if (resultado.rowCount === 0) {
+      // apartado de error para usuario no encontrado
       return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
 
     const user = resultado.rows[0];
 
+    // apartado de error para contraseña incorrecta
     if (user.password !== password) {
       return res.status(401).json({ error: 'Contraseña incorrecta.' });
     }
@@ -123,6 +150,7 @@ app.post('/api/login', async (req, res) => {
 
     res.json({ id: user.id, name: user.name, email: user.email });
   } catch (error) {
+    // apartado de error para fallo al iniciar sesión
     console.error('Error iniciando sesión:', error);
     res.status(500).json({ error: 'No se pudo iniciar sesión.' });
   }
@@ -142,6 +170,7 @@ app.get('/api/users', async (req, res) => {
 
 app.get('/api/progress', async (req, res) => {
   const { email } = req.query;
+  // apartado: obtener progreso (param: email)
 
   if (!email) {
     return res.status(400).json({ error: 'Envía el correo del usuario.' });
@@ -153,6 +182,7 @@ app.get('/api/progress', async (req, res) => {
       [email]
     );
 
+    // apartado de error para usuario no encontrado
     if (userResult.rowCount === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
@@ -170,6 +200,7 @@ app.get('/api/progress', async (req, res) => {
 
     res.json({ user, progress });
   } catch (error) {
+    // apartado de error para fallo al obtener progreso
     console.error('Error obteniendo progreso:', error);
     res.status(500).json({ error: 'No se pudo obtener el progreso.' });
   }
@@ -177,6 +208,7 @@ app.get('/api/progress', async (req, res) => {
 
 app.post('/api/challenges/complete', async (req, res) => {
   const { email, challengeCode, points } = req.body;
+  // apartado: completar reto (datos recibidos)
 
   if (!email || !challengeCode || typeof points !== 'number') {
     return res.status(400).json({ error: 'Envía correo, código del reto y puntos.' });
@@ -192,6 +224,7 @@ app.post('/api/challenges/complete', async (req, res) => {
       [email]
     );
 
+    // apartado de error para usuario no encontrado
     if (userResult.rowCount === 0) {
       await client.query('ROLLBACK');
       return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -214,6 +247,7 @@ app.post('/api/challenges/complete', async (req, res) => {
       [user.id, challengeCode, points]
     );
 
+    // apartado: caso reto ya completado
     if (challengeResult.rowCount === 0) {
       await client.query('ROLLBACK');
       const progress = await loadProgress(pool, user.id);
@@ -248,6 +282,7 @@ app.post('/api/challenges/complete', async (req, res) => {
     } catch (rollbackError) {
       console.error('Error revirtiendo la transacción:', rollbackError);
     }
+    // apartado de error para fallo registrando reto
     console.error('Error registrando reto:', error);
     res.status(500).json({ error: 'No se pudo registrar el reto.' });
   } finally {
@@ -257,6 +292,7 @@ app.post('/api/challenges/complete', async (req, res) => {
 
 app.post('/api/rewards/redeem', async (req, res) => {
   const { email, rewardCode, rewardName, cost } = req.body;
+  // apartado: canjear premio (datos recibidos)
 
   if (!email || !rewardCode || !rewardName || typeof cost !== 'number') {
     return res.status(400).json({ error: 'Envía correo, código, nombre del premio y costo.' });
@@ -272,6 +308,7 @@ app.post('/api/rewards/redeem', async (req, res) => {
       [email]
     );
 
+    // apartado de error para usuario no encontrado
     if (userResult.rowCount === 0) {
       await client.query('ROLLBACK');
       return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -295,6 +332,7 @@ app.post('/api/rewards/redeem', async (req, res) => {
       ? puntosActuales.rows[0].total_points
       : 0;
 
+    // apartado de error: puntos insuficientes
     if (totalDisponible < cost) {
       await client.query('ROLLBACK');
       const progress = await loadProgress(pool, user.id);
@@ -335,6 +373,7 @@ app.post('/api/rewards/redeem', async (req, res) => {
     } catch (rollbackError) {
       console.error('Error revirtiendo la transacción:', rollbackError);
     }
+    // apartado de error para fallo canjeando premio
     console.error('Error canjeando premio:', error);
     res.status(500).json({ error: 'No se pudo canjear el premio.' });
   } finally {
