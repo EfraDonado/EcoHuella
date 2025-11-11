@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retos EcoHuella | Vive la experiencia</title>
+  <style>
+    :root {
+      --green-primary: #1f8a5b;
+      --green-secondary: #35c47c;
+      --green-soft: #e4f7ee;
+      --text-dark: #243128;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(160deg, #f0fff4 0%, #dff9ec 45%, #f0fff4 100%);
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+
+    header {
+      max-width: 1100px;
+      margin: 40px auto 20px;
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(31, 138, 91, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: floatIn 0.9s ease;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.6rem;
+      color: var(--green-primary);
+      letter-spacing: -1px;
+    }
+
+    header p {
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+
+    header .status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .acciones-rapidas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .acciones-rapidas a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: var(--green-primary);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 12px 24px rgba(31, 138, 91, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .acciones-rapidas a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(31, 138, 91, 0.22);
+    }
+
+    .status-card {
+      flex: 1 1 220px;
+      background: var(--green-soft);
+      border-radius: 18px;
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: inset 0 0 0 1px rgba(31, 138, 91, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-card::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(31,138,91,0.18) 0%, rgba(31,138,91,0) 70%);
+      top: -40px;
+      right: -30px;
+    }
+
+    .status-card span {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .status-card strong {
+      font-size: 1.6rem;
+      color: var(--green-primary);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto 60px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 26px;
+      padding: 0 12px 40px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      box-shadow: 0 18px 45px rgba(27, 121, 80, 0.12);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: var(--green-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .retos-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .reto-card {
+      border-radius: 22px;
+      padding: 22px;
+      background: linear-gradient(125deg, rgba(31,138,91,0.06), rgba(53,196,124,0.08));
+      box-shadow: 0 10px 30px rgba(31, 138, 91, 0.12);
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      gap: 10px;
+      transition: transform 0.4s cubic-bezier(.4, 0, .2, 1), box-shadow 0.4s;
+    }
+
+    .reto-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(31, 138, 91, 0.18);
+    }
+
+    .reto-card h3 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .reto-card p {
+      margin: 0;
+      line-height: 1.5;
+      font-size: 0.98rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(31, 138, 91, 0.12);
+      color: var(--green-primary);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .reto-card button {
+      justify-self: start;
+      background: var(--green-primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s;
+    }
+
+    .reto-card button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(31, 138, 91, 0.24);
+    }
+
+    .reto-card button:disabled {
+      background: rgba(31, 138, 91, 0.28);
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .recompensas-lista {
+      display: grid;
+      gap: 16px;
+    }
+
+    .recompensa {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: inset 0 0 0 1px rgba(31, 138, 91, 0.12);
+      display: grid;
+      gap: 8px;
+    }
+
+    .recompensa button {
+      width: fit-content;
+      background: var(--green-secondary);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s ease;
+    }
+
+    .recompensa button:hover {
+      transform: translateY(-2px);
+    }
+
+    .recompensa button.boton-desactivado {
+      background: rgba(31, 138, 91, 0.28);
+      box-shadow: none;
+    }
+
+    .registro-premios {
+      background: rgba(31,138,91,0.08);
+      border-radius: 22px;
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .mensaje {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%) translateY(60px);
+      background: #1f8a5b;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 999px;
+      box-shadow: 0 12px 30px rgba(31, 138, 91, 0.28);
+      opacity: 0;
+      transition: all 0.4s ease;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .mensaje.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 920px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        margin: 24px 12px;
+        padding: 24px;
+      }
+
+      main {
+        padding: 0 12px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Retos que abrazan al planeta</h1>
+    <p>Escoge las acciones que más te inspiren, suma eco puntos y canjéalos por pequeñas recompensas que celebran tu esfuerzo diario. Cada clic que das aquí se siente en el mundo real.</p>
+    <div class="acciones-rapidas">
+      <a href="../index.html">Ir al inicio</a>
+      <a href="MiPerfil.html">Mi perfil</a>
+      <a href="Calculadora.html">Ir a la calculadora</a>
+    </div>
+    <div class="status">
+      <div class="status-card">
+        <span>Eco puntos acumulados</span>
+        <strong id="totalPuntos">0</strong>
+      </div>
+      <div class="status-card">
+        <span>Retos completados hoy</span>
+        <strong id="retosCompletados">0</strong>
+      </div>
+      <div class="status-card">
+        <span>Premios canjeados</span>
+        <strong id="premiosCanjeados">0</strong>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel" id="panelRetos">
+      <h2>Retos disponibles</h2>
+      <p style="margin:0; line-height:1.6;">Cada reto está pensado para que lo disfrutes. Al completarlo, sumas puntos y activas animaciones que celebran tu constancia.</p>
+      <div class="retos-grid" id="retosGrid"></div>
+    </section>
+
+    <aside class="panel">
+      <div>
+        <h2>Canjea tus premios</h2>
+        <p style="margin:8px 0 0; line-height:1.6;">Convierte tus puntos en experiencias simbólicas: desde insignias digitales hasta accesos exclusivos a nuevos retos.</p>
+      </div>
+      <div class="recompensas-lista" id="recompensasLista"></div>
+      <div class="registro-premios" id="registroPremios">
+        <strong>Últimos premios canjeados</strong>
+        <span>No has canjeado premios todavía. ¿Qué te gustaría conseguir primero?</span>
+      </div>
+    </aside>
+  </main>
+
+  <div class="mensaje" id="toast"></div>
+
+  <script>
+  const API_URL = window.__ECO_API_URL || (() => {
+    const { hostname } = window.location;
+    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+    return isLocal ? 'http://localhost:4000/api' : 'https://ecohuella.onrender.com/api';
+  })();
+
+  if (!window.__ECO_API_URL) {
+    window.__ECO_API_URL = API_URL;
+  }
+
+    const RETOS = [
+      { id: 'reto-energia', titulo: 'Dale un respiro a la energía', descripcion: 'Desconecta cargadores y electrodomésticos que no estás usando. Regálale un descanso a la red eléctrica.', puntos: 30, etiqueta: '10 min' },
+      { id: 'reto-movilidad', titulo: 'Ruta verde', descripcion: 'Elige caminar, pedalear o usar transporte público en al menos un trayecto del día.', puntos: 40, etiqueta: 'Transporte' },
+      { id: 'reto-agua', titulo: 'Agua que no esperas', descripcion: 'Recolecta el agua fría de la ducha mientras llega la caliente para reutilizarla en plantas.', puntos: 25, etiqueta: 'Casa' },
+      { id: 'reto-alimentos', titulo: 'Plato consciente', descripcion: 'Prepara una comida basada en vegetales locales y comparte la foto con alguien para inspirarlo.', puntos: 35, etiqueta: 'Cocina' },
+      { id: 'reto-desconexion', titulo: 'Noche sin pantallas', descripcion: 'Apaga tus pantallas una hora antes de dormir y dedica ese tiempo a leer o compartir en familia.', puntos: 20, etiqueta: 'Bienestar' },
+      { id: 'reto-reciclaje', titulo: 'Clasifica sin excusas', descripcion: 'Dedica 15 minutos a separar correctamente los residuos de tu hogar y etiqueta cada contenedor.', puntos: 28, etiqueta: 'Residuos' },
+      { id: 'reto-plantas', titulo: 'Micro bosque en casa', descripcion: 'Planta o adopta una planta nueva y compártela con alguien para inspirar otra adopción.', puntos: 32, etiqueta: 'Naturaleza' },
+      { id: 'reto-compost', titulo: 'Compost express', descripcion: 'Investiga un punto de compost cercano y lleva allí tus restos orgánicos de hoy.', puntos: 30, etiqueta: 'Orgánicos' },
+      { id: 'reto-bolsas', titulo: 'Bolsa cero', descripcion: 'Sal al mercado con tus bolsas reutilizables y rechaza todas las bolsas plásticas.', puntos: 22, etiqueta: 'Consumo' },
+      { id: 'reto-iluminacion', titulo: 'Luz inteligente', descripcion: 'Cambia dos bombillos por opciones LED y registra el cambio en tu hogar.', puntos: 34, etiqueta: 'Hogar' },
+      { id: 'reto-reparacion', titulo: 'Alarga la vida útil', descripcion: 'Repara o da mantenimiento a un objeto que pensabas reemplazar. Comparte el antes y después.', puntos: 38, etiqueta: 'Circularidad' },
+      { id: 'reto-comunidad', titulo: 'Invita a otro guardián', descripcion: 'Invita a una persona a unirse a EcoHuella y acompáñala en su primer reto.', puntos: 45, etiqueta: 'Comunidad' }
+    ];
+
+    const PREMIOS = [
+      { id: 'premio-insignia', nombre: 'Insignia "Guardían EcoHuella"', costo: 80, descripcion: 'Un pin digital brillante que reconoce tu compromiso.' },
+      { id: 'premio-reto', nombre: 'Acceso a reto exclusivo', costo: 120, descripcion: 'Desbloquea una misión secreta con desafíos colaborativos.' },
+      { id: 'premio-kit', nombre: 'Mini kit de ideas verdes', costo: 150, descripcion: 'Recibe una guía descargable con ideas nuevas cada semana.' }
+    ];
+
+    const RETO_BATCH_SIZE = 3;
+
+    const userEmail = sessionStorage.getItem('ecoUserEmail');
+
+    let puntos = 0;
+    let retosRegistrados = [];
+    let premiosRegistrados = [];
+    let retosCompletados = new Set();
+
+    const totalPuntosEl = document.getElementById('totalPuntos');
+    const retosCompletadosEl = document.getElementById('retosCompletados');
+    const premiosCanjeadosEl = document.getElementById('premiosCanjeados');
+    const retosGrid = document.getElementById('retosGrid');
+    const recompensasLista = document.getElementById('recompensasLista');
+    const registroPremios = document.getElementById('registroPremios');
+    const toast = document.getElementById('toast');
+
+    const mezclar = (lista) => {
+      const copia = [...lista];
+      for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+      }
+      return copia;
+    };
+
+    const obtenerRetosDisponibles = () => {
+      const completados = new Set(retosRegistrados.map((reto) => reto.code));
+      return mezclar(RETOS.filter((reto) => !completados.has(reto.id)));
+    };
+
+    const sincronizarEstado = (progress) => {
+      puntos = progress.points || 0;
+      retosRegistrados = progress.challenges || [];
+      premiosRegistrados = progress.rewards || [];
+      retosCompletados = new Set(retosRegistrados.map((reto) => reto.code));
+    };
+
+    const actualizarResumen = () => {
+      totalPuntosEl.textContent = puntos;
+      retosCompletadosEl.textContent = retosRegistrados.length;
+      premiosCanjeadosEl.textContent = premiosRegistrados.length;
+
+      if (premiosRegistrados.length === 0) {
+        registroPremios.innerHTML = '<strong>Últimos premios canjeados</strong><span>No has canjeado premios todavía. ¿Qué te gustaría conseguir primero?</span>';
+        return;
+      }
+
+      const ultimos = premiosRegistrados.slice(0, 3).map((premio) => {
+        const fecha = new Date(premio.redeemed_at);
+        const fechaLegible = fecha.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+        return `<span>• ${premio.name} (${fechaLegible})</span>`;
+      });
+
+      registroPremios.innerHTML = '<strong>Últimos premios canjeados</strong>' + ultimos.join('');
+    };
+
+    const mostrarMensaje = (texto) => {
+      toast.textContent = texto;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2400);
+    };
+
+    const obtenerProgreso = async () => {
+      if (!userEmail) {
+        mostrarMensaje('Inicia sesión para guardar tu progreso.');
+        return;
+      }
+
+      const respuesta = await fetch(`${API_URL}/progress?email=${encodeURIComponent(userEmail)}`);
+      if (!respuesta.ok) {
+        throw new Error('No fue posible cargar tu progreso.');
+      }
+
+      const data = await respuesta.json();
+      sincronizarEstado(data.progress);
+    };
+
+    const completarReto = async (reto, boton) => {
+      if (!userEmail) {
+        mostrarMensaje('Inicia sesión para sumar puntos.');
+        return;
+      }
+
+      const textoOriginal = boton.textContent;
+      boton.disabled = true;
+      boton.textContent = 'Guardando...';
+
+      try {
+        const respuesta = await fetch(`${API_URL}/challenges/complete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: userEmail, challengeCode: reto.id, points: reto.puntos })
+        });
+
+        const data = await respuesta.json();
+
+        if (!respuesta.ok) {
+          throw new Error(data.error || 'No se pudo registrar el reto.');
+        }
+
+        if (data.alreadyCompleted) {
+          sincronizarEstado(data.progress);
+          renderRetos();
+          actualizarResumen();
+          mostrarMensaje('Ese reto ya estaba celebrado.');
+          return;
+        }
+
+        sincronizarEstado(data.progress);
+        renderRetos();
+        actualizarResumen();
+        mostrarMensaje(`Súper, sumaste ${reto.puntos} puntos`);
+      } catch (error) {
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
+        console.error(error);
+        mostrarMensaje(error.message);
+      }
+    };
+
+    const canjearPremio = async (premio, boton) => {
+      if (!userEmail) {
+        mostrarMensaje('Inicia sesión para canjear premios.');
+        return;
+      }
+
+      if (puntos < premio.costo) {
+        mostrarMensaje('Aún te faltan algunos puntos. Sigue sumando, vas muy bien.');
+        return;
+      }
+
+      const textoOriginal = boton.textContent;
+      boton.disabled = true;
+      boton.textContent = 'Canjeando...';
+
+      try {
+        const respuesta = await fetch(`${API_URL}/rewards/redeem`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: userEmail,
+            rewardCode: premio.id,
+            rewardName: premio.nombre,
+            cost: premio.costo
+          })
+        });
+
+        const data = await respuesta.json();
+
+        if (!respuesta.ok) {
+          throw new Error(data.error || 'No se pudo canjear el premio.');
+        }
+
+        sincronizarEstado(data.progress);
+        renderPremios();
+        actualizarResumen();
+        mostrarMensaje(`Premio canjeado: ${premio.nombre} 🎉`);
+      } catch (error) {
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
+        console.error(error);
+        mostrarMensaje(error.message);
+      }
+    };
+
+    const renderRetos = () => {
+      retosGrid.innerHTML = '';
+      if (!userEmail) {
+        RETOS.slice(0, RETO_BATCH_SIZE).forEach((reto) => {
+          const card = document.createElement('article');
+          card.className = 'reto-card';
+          card.innerHTML = `
+            <span class="tag">${reto.etiqueta}</span>
+            <h3>${reto.titulo}</h3>
+            <p>${reto.descripcion}</p>
+            <button data-id="${reto.id}" disabled>Inicia sesión para sumar</button>
+          `;
+          retosGrid.appendChild(card);
+        });
+        return;
+      }
+
+      const disponibles = obtenerRetosDisponibles();
+
+      if (!disponibles.length) {
+        const mensaje = document.createElement('p');
+        mensaje.style.margin = '0';
+        mensaje.style.padding = '20px';
+        mensaje.style.borderRadius = '18px';
+        mensaje.style.background = 'rgba(31,138,91,0.08)';
+        mensaje.style.lineHeight = '1.6';
+        mensaje.textContent = 'Has completado todos los retos disponibles por ahora. Vuelve pronto para descubrir nuevos desafíos.';
+        retosGrid.appendChild(mensaje);
+        return;
+      }
+
+      disponibles.slice(0, RETO_BATCH_SIZE).forEach((reto) => {
+        const card = document.createElement('article');
+        card.className = 'reto-card';
+        card.innerHTML = `
+          <span class="tag">${reto.etiqueta}</span>
+          <h3>${reto.titulo}</h3>
+          <p>${reto.descripcion}</p>
+          <button data-id="${reto.id}">Sumar ${reto.puntos} puntos</button>
+        `;
+
+        const boton = card.querySelector('button');
+        boton.addEventListener('click', () => completarReto(reto, boton));
+        retosGrid.appendChild(card);
+      });
+    };
+
+    const renderPremios = () => {
+      recompensasLista.innerHTML = '';
+      PREMIOS.forEach((premio) => {
+        const item = document.createElement('article');
+        item.className = 'recompensa';
+        item.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+            <strong>${premio.nombre}</strong>
+            <span class="tag" style="background: rgba(53,196,124,0.18);">${premio.costo} pts</span>
+          </div>
+          <p style="margin:0; line-height:1.5;">${premio.descripcion}</p>
+          <button data-id="${premio.id}">${puntos >= premio.costo ? 'Canjear' : 'Reúne más puntos'}</button>
+        `;
+
+        const boton = item.querySelector('button');
+
+        if (!userEmail) {
+          boton.textContent = 'Inicia sesión';
+          boton.disabled = true;
+        } else {
+          boton.classList.toggle('boton-desactivado', puntos < premio.costo);
+          boton.addEventListener('click', () => canjearPremio(premio, boton));
+        }
+
+        recompensasLista.appendChild(item);
+      });
+    };
+
+    const iniciar = async () => {
+      renderPremios();
+
+      try {
+        await obtenerProgreso();
+      } catch (error) {
+        console.error(error);
+        mostrarMensaje(error.message);
+      }
+
+      renderRetos();
+      renderPremios();
+      actualizarResumen();
+    };
+
+    iniciar();
+  </script>
+</body>
+</html>

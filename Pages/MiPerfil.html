@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil | EcoHuella</title>
+  <style>
+    :root {
+      --green-primary: #1f8a5b;
+      --green-secondary: #35c47c;
+      --green-soft: #ecf9f1;
+      --text-dark: #233128;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(155deg, #f1fff5 0%, #dff5e6 50%, #f1fff5 100%);
+      color: var(--text-dark);
+    }
+
+    .perfil-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 18px 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .perfil-hero {
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 32px;
+      box-shadow: 0 24px 68px rgba(31, 138, 91, 0.14);
+      padding: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .perfil-meta {
+      flex: 1 1 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .perfil-meta span {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(35, 49, 40, 0.7);
+    }
+
+    .perfil-meta h1 {
+      margin: 0;
+      font-size: 2.4rem;
+      color: var(--green-primary);
+    }
+
+    .perfil-meta p {
+      margin: 0;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .perfil-stats {
+      flex: 1 1 280px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--green-soft);
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(31, 138, 91, 0.08);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(53, 196, 124, 0.2) 0%, rgba(53, 196, 124, 0) 70%);
+      bottom: -40px;
+      right: -30px;
+    }
+
+    .stat-card span {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .stat-card strong {
+      font-size: 1.8rem;
+      color: var(--green-primary);
+    }
+
+    .perfil-main {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 26px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 28px;
+      box-shadow: 0 20px 58px rgba(27, 121, 80, 0.14);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: var(--green-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .resumen-user {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.95rem;
+    }
+
+    .retos-lista, .premios-lista {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card-actividad {
+      border-radius: 20px;
+      padding: 20px;
+      background: linear-gradient(125deg, rgba(31,138,91,0.06), rgba(53,196,124,0.08));
+      box-shadow: 0 14px 34px rgba(31, 138, 91, 0.12);
+      display: grid;
+      gap: 6px;
+    }
+
+    .card-actividad strong {
+      font-size: 1.1rem;
+    }
+
+    .card-actividad span {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .pill {
+      background: rgba(31, 138, 91, 0.14);
+      color: var(--green-primary);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .call-to-action {
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-principal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: var(--green-primary);
+      color: #fff;
+      box-shadow: 0 14px 26px rgba(31, 138, 91, 0.24);
+      text-decoration: none;
+    }
+
+    .btn-secundario {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: rgba(31, 138, 91, 0.12);
+      color: var(--green-primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .mensaje-vacio {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(31,138,91,0.08);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--green-primary);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 999px;
+      box-shadow: 0 16px 32px rgba(31, 138, 91, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .perfil-main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .perfil-hero {
+        padding: 28px;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="perfil-layout">
+    <header class="perfil-hero">
+      <div class="perfil-meta">
+        <span>Mi viaje sostenible</span>
+        <h1 id="perfilSaludo">Hola, EcoHuella</h1>
+        <p id="perfilDescripcion">Conecta tu cuenta para seguir viendo cómo tus acciones suman al planeta.</p>
+        <div class="resumen-user" id="perfilDatos"></div>
+        <div class="call-to-action">
+          <a class="btn-principal" href="retos.html">Ir a mis retos</a>
+          <button class="btn-secundario" id="btnCerrarSesion" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+      <div class="perfil-stats">
+        <div class="stat-card">
+          <span>Eco puntos disponibles</span>
+          <strong id="statPuntos">0</strong>
+          <span id="statActualizado">Actualizado hace un momento</span>
+        </div>
+        <div class="stat-card">
+          <span>Retos completados</span>
+          <strong id="statRetos">0</strong>
+          <span id="statRetosDetalle">Completa tu primer reto</span>
+        </div>
+        <div class="stat-card">
+          <span>Premios canjeados</span>
+          <strong id="statPremios">0</strong>
+          <span id="statPremiosDetalle">Ningún premio todavía</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="perfil-main">
+      <section class="panel">
+        <h2>Progreso reciente</h2>
+        <div class="retos-lista" id="listaRetos"></div>
+      </section>
+      <aside class="panel">
+        <h2>Premios canjeados</h2>
+        <div class="premios-lista" id="listaPremios"></div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  const API_URL = 'https://ecohuella.onrender.com/api';
+    const userName = sessionStorage.getItem('ecoUserName') || 'EcoHuella';
+    const userEmail = sessionStorage.getItem('ecoUserEmail');
+
+    const perfilSaludo = document.getElementById('perfilSaludo');
+    const perfilDescripcion = document.getElementById('perfilDescripcion');
+    const perfilDatos = document.getElementById('perfilDatos');
+    const listaRetos = document.getElementById('listaRetos');
+    const listaPremios = document.getElementById('listaPremios');
+    const statPuntos = document.getElementById('statPuntos');
+    const statRetos = document.getElementById('statRetos');
+    const statPremios = document.getElementById('statPremios');
+    const statActualizado = document.getElementById('statActualizado');
+    const statRetosDetalle = document.getElementById('statRetosDetalle');
+    const statPremiosDetalle = document.getElementById('statPremiosDetalle');
+    const toast = document.getElementById('toast');
+    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+
+    const mostrarToast = (mensaje) => {
+      toast.textContent = mensaje;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2400);
+    };
+
+    const formatearFecha = (fechaStr) => {
+      if (!fechaStr) {
+        return 'Hace un momento';
+      }
+      const fecha = new Date(fechaStr);
+      return fecha.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    const formatearTituloReto = (codigo) => {
+      const limpio = codigo.replace(/^reto-/, '');
+      return limpio.split('-').map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1)).join(' ');
+    };
+
+    const renderRetos = (retos) => {
+      if (!retos.length) {
+        listaRetos.innerHTML = '<div class="mensaje-vacio">Cuando completes tus retos verdes aparecerán aquí con todos los detalles. ¡Explora la sección de retos y suma tus primeros puntos!</div>';
+        return;
+      }
+
+      listaRetos.innerHTML = '';
+      retos.forEach((reto) => {
+        const item = document.createElement('article');
+        item.className = 'card-actividad';
+        item.innerHTML = `
+          <span class="pill">${reto.points} pts</span>
+          <strong>${formatearTituloReto(reto.code)}</strong>
+          <span>${formatearFecha(reto.completed_at)}</span>
+        `;
+        listaRetos.appendChild(item);
+      });
+    };
+
+    const renderPremios = (premios) => {
+      if (!premios.length) {
+        listaPremios.innerHTML = '<div class="mensaje-vacio">Aún no hay premios canjeados. Cuando reúnas suficientes puntos podrás desbloquear experiencias especiales aquí mismo.</div>';
+        return;
+      }
+
+      listaPremios.innerHTML = '';
+      premios.forEach((premio) => {
+        const item = document.createElement('article');
+        item.className = 'card-actividad';
+        item.innerHTML = `
+          <span class="pill">-${premio.cost} pts</span>
+          <strong>${premio.name}</strong>
+          <span>${formatearFecha(premio.redeemed_at)}</span>
+        `;
+        listaPremios.appendChild(item);
+      });
+    };
+
+    const actualizarResumen = (progreso) => {
+      statPuntos.textContent = progreso.points || 0;
+      statRetos.textContent = progreso.challenges.length;
+      statPremios.textContent = progreso.rewards.length;
+      statActualizado.textContent = progreso.updatedAt ? `Actualizado ${formatearFecha(progreso.updatedAt)}` : 'Actualizado recién';
+      statRetosDetalle.textContent = progreso.challenges.length ? 'Sigue sumando nuevas historias' : 'Completa tu primer reto';
+      statPremiosDetalle.textContent = progreso.rewards.length ? 'Comparte tus logros con tu comunidad' : 'Ningún premio todavía';
+    };
+
+    const cargarPerfil = async () => {
+      perfilSaludo.textContent = `Hola, ${userName}`;
+
+      if (!userEmail) {
+        perfilDescripcion.textContent = 'Inicia sesión para conectar tu progreso y ver tus estadísticas personalizadas.';
+        perfilDatos.innerHTML = '<span class="mensaje-vacio">No tenemos un correo asociado. Ve a la sección de registro e inicia sesión para activar tu perfil.</span>';
+        renderRetos([]);
+        renderPremios([]);
+        return;
+      }
+
+      perfilDescripcion.textContent = 'Tu impacto sostenible se registra y te acompaña, sin importar desde dónde ingreses.';
+      perfilDatos.innerHTML = `<span>${userEmail}</span>`;
+
+      try {
+        const respuesta = await fetch(`${API_URL}/progress?email=${encodeURIComponent(userEmail)}`);
+        const data = await respuesta.json();
+
+        if (!respuesta.ok) {
+          throw new Error(data.error || 'No se pudo consultar tu progreso.');
+        }
+
+        const progreso = data.progress || { points: 0, challenges: [], rewards: [] };
+        actualizarResumen(progreso);
+        renderRetos(progreso.challenges);
+        renderPremios(progreso.rewards);
+      } catch (error) {
+        console.error(error);
+        mostrarToast(error.message);
+        renderRetos([]);
+        renderPremios([]);
+      }
+    };
+
+    btnCerrarSesion.addEventListener('click', () => {
+      sessionStorage.removeItem('ecoUserName');
+      sessionStorage.removeItem('ecoUserEmail');
+      mostrarToast('Sesión cerrada.');
+      setTimeout(() => {
+        window.location.href = 'registro.html';
+      }, 600);
+    });
+
+    cargarPerfil();
+  </script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EcoHuella - Tu huella cuenta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet" /> <!-- Nueva fuente -->
+  <link
+    href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh3-GRwZEIaHdXIim4l_VB742qC6V4MPQx5ygca2rmmzJRA1lOcTp-Hry4Qb3FZqTTButXgcyvlC-f7g_zDJnxetKmAki3Qy0YtshKtyl_QvR9PCnZPV3VlmWJPw0Sbxp7bzGQO6SseaEw4EWsVonNv80leEB7rhygmcoEyO73_4eCaioCHyyfZShaNeA4/s1772/2023_06_05_dia-del-medio-ambiente.jpg"
+    rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: #fff;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: slideDown 0.8s ease;
+    }
+
+    header h2 {
+      color: #27ae60;
+      font-weight: 700;
+      animation: pulse 1s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    header nav a,
+    .dropdown .dropbtn {
+      margin: 0 15px;
+      padding: 5px 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s, background 0.3s, transform 0.2s, box-shadow 0.2s;
+      border-radius: 6px;
+      outline: none;
+      display: inline-block;
+      box-shadow: 0 0 0 rgba(39,174,96,0);
+    }
+    header nav a:hover, header nav a:focus,
+    .dropdown .dropbtn:hover, .dropdown .dropbtn:focus {
+      color: #fff;
+      background: #27ae60;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(39,174,96,0.13);
+    }
+
+    .btn-login {
+      background: #219150;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-login:hover {
+      background: #219150;
+      transform: scale(1.05);
+    }
+
+    .hero {
+      background: url("imagenes/mirada.png") center center / cover no-repeat;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      animation: fadeIn 1.5s ease;
+      padding: 0;
+    }
+
+    .hero h1, .hero p, .hero button {
+      text-align: center;
+      align-self: center;
+    }
+
+    .hero img {
+      width: 400px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      animation: zoomIn 1.5s ease;
+    }
+
+    .hero h1 {
+      color: #ffffff;
+      font-size: 2.5em; 
+      font-weight: 700; 
+      max-width: 700px;
+      animation: fadeIn 1.5s ease;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .hero p {
+      font-size: 1.4em;
+      margin-top: 0.3em;
+      color: #ffffff;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+      animation: fadeInUp 1.5s ease;
+    }
+
+    .hero button {
+      margin-top: 30px;
+      background: #219150;
+      border: none;
+      padding: 14px 25px;
+      font-size: 1.1rem;
+      color: white;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      animation: fadeUp 1.8s ease;
+    }
+
+    .hero button:hover {
+      background: #27ae60;
+      transform: scale(1.05);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 60px 20px;
+      margin: auto;
+      opacity: 1;
+      transition: transform 0.8s ease, opacity 0.8s ease;
+    }
+
+    section.in-view {
+      animation: fadeSection 0.8s ease forwards;
+    }
+
+    @keyframes fadeSection {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section h2 {
+      color: #27ae60;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      grid-column: 1 / -1;
+    }
+
+    section p, section ul {
+      text-align: left;
+    }
+
+    #odsModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      animation: fadeIn 0.5s ease;
+    }
+
+    #odsModal-content {
+      background: white;
+      color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      text-align: left;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      section {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        align-items: center;
+      }
+    }
+
+    .faq-list {
+      margin-top: 30px;
+    }
+    .faq-item {
+      margin-bottom: 18px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(39,174,96,0.07);
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #219150;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 18px 20px;
+      text-align: left;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s;
+    }
+    .faq-question.active, .faq-question:hover {
+      background: #e6f7e6;
+    }
+    .faq-answer {
+      background: #f7f7f7;
+      color: #333;
+      font-size: 1rem;
+      padding: 0 20px 18px 20px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(.4,0,.2,1), opacity 0.4s;
+    }
+
+    .dropdown .dropdown-content a:hover {
+      color: #27ae60 !important;
+      background: #e6f7e6 !important;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 100%;
+      background: #fff;
+      min-width: 180px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      z-index: 1001;
+      padding: 10px 0;
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    .dropdown.open .dropdown-content {
+      display: block;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      animation: dropdownFadeIn 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    .dropdown-content button {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 1rem;
+      padding: 12px 20px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.25s cubic-bezier(.4,0,.2,1);
+      border-radius: 6px;
+      outline: none;
+      position: relative;
+      will-change: transform, box-shadow;
+    }
+    .dropdown-content button:hover, .dropdown-content button:focus {
+      color: #27ae60;
+      background: #ffffff;
+      transform: translateX(8px) scale(1.04);
+      box-shadow: 0 2px 12px rgba(39,174,96,0.10);
+      animation: btnBounce 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes btnBounce {
+      0% { transform: translateX(0) scale(1); }
+      40% { transform: translateX(12px) scale(1.08); }
+      60% { transform: translateX(6px) scale(0.98); }
+      100% { transform: translateX(8px) scale(1.04); }
+    }
+    .dropdown .dropbtn:hover, .dropdown .dropbtn:focus {
+      color: #27ae60;
+      background: #ececec;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(39,174,96,0.13);
+    }
+
+    .perfil-dropdown .dropbtn {
+      background: #219150;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(39,174,96,0.10);
+      outline: none;
+      text-decoration: none;
+    }
+    .perfil-dropdown .dropbtn:hover, .perfil-dropdown .dropbtn:focus {
+      background: #27ae60;
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(39,174,96,0.18);
+    }
+    .perfil-dropdown-content {
+      left: auto;
+      right: 0;
+      min-width: 180px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      z-index: 1001;
+      padding: 10px 0;
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+      pointer-events: none;
+      position: absolute;
+      top: 100%;
+      transition: opacity 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
+      display: none;
+    }
+    .perfil-dropdown.open .perfil-dropdown-content {
+      display: block;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      animation: dropdownFadeIn 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    .perfil-dropdown-content button {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 1rem;
+      padding: 12px 20px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.25s cubic-bezier(.4,0,.2,1);
+      border-radius: 6px;
+      outline: none;
+      position: relative;
+      will-change: transform, box-shadow;
+    }
+    .perfil-dropdown-content button:hover, .perfil-dropdown-content button:focus {
+      color: #27ae60;
+      background: #e6f7e6;
+      transform: translateX(8px) scale(1.04);
+      box-shadow: 0 2px 12px rgba(39,174,96,0.10);
+      animation: btnBounce 0.35s cubic-bezier(.4,0,.2,1);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Barra superior fija con el logo y las rutas rápidas -->
+  <header>
+    <div class="logo">
+      <img src="imagenes/logodef.png" alt="Logo EcoHuella" style="height:50px; vertical-align:middle; margin-right:8px;">
+    </div>
+    <nav style="position:relative;">
+      <div class="dropdown" style="display:inline-block; position:relative;">
+        <button class="dropbtn" style="background:none; border:none; color:#333; font-weight:500; font-size:1rem; padding:5px 10px; cursor:pointer;">Inicio ▼</button>
+        <div class="dropdown-content">
+          <button onclick="scrollToSection('hero')">Inicio</button>
+          <button onclick="scrollToSection('quienes')">Quiénes somos</button>
+          <button onclick="scrollToSection('proposito')">Nuestro propósito</button>
+          <button onclick="scrollToSection('faq')">Preguntas Frecuentes</button>
+          <button onclick="scrollToSection('testimonios')">Testimonios</button>
+        </div>
+      </div>
+      <a href="pages/calculadora.html">Calculadora</a>
+      <a href="pages/retos.html">Retos</a>
+    </nav>
+    <div class="dropdown perfil-dropdown" style="display:inline-block; position:relative;">
+      <button id="btnLogin" class="btn-login dropbtn" style="font-size:1.1rem; padding:12px 28px;">Únete</button>
+      <div class="dropdown-content perfil-dropdown-content">
+        <button onclick="window.location.href='Pages/MiPerfil.html'">Mi Perfil</button>
+        <button id="cerrarSesionBtn">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero: mensaje de bienvenida y llamada a la acción principal -->
+  <section class="hero" id="hero">
+    <h1>Conecta con comunidades ambientales que generan cambio</h1>
+    <p>Cuidar el planeta empieza contigo. Únete a miles de personas que ya están reduciendo su impacto diario. 🌍</p>
+    <div id="hero-action"></div>
+  </section>
+
+  <!-- Bloque de presentación: quiénes somos y qué hacemos -->
+  <section id="quienes" style="background:#f7f7f7; padding:60px 20px;">
+    <h2 style="color:#27ae60; font-size:2rem; margin-bottom:25px;">Quiénes somos</h2>
+    <p>Somos una iniciativa global comprometida con reducir la huella ecológica mediante acciones sostenibles y educación ambiental. Nos enfocamos en el ODS 13: Acción por el Clima, promoviendo medidas para combatir el cambio climático.</p>
+    <p>En EcoHuella, creemos que cada persona puede marcar la diferencia. Por ejemplo, adoptar hábitos como usar transporte público o reciclar puede ahorrar hasta 1 tonelada de CO2 al año. ¡Únete y descubre cómo!</p>
+    <ul>
+      <li>Organizamos eventos virtuales para educar sobre el clima.</li>
+      <li>Colaboramos con organizaciones locales para plantar árboles.</li>
+      <li>Proporcionamos recursos gratuitos para medir tu huella personal.</li>
+    </ul>
+  </section>
+
+  <!-- Propósito y acciones sencillas para sumarse -->
+  <section id="proposito">
+    <h2>Nuestro propósito</h2>
+    <p>Promovemos hábitos que generan un impacto positivo en el medio ambiente, con un enfoque principal en el ODS 13: Acción por el Clima. Nuestro objetivo es inspirar a otros a actuar contra el cambio climático.</p>
+    <p>El cambio climático es una crisis global, pero con acciones simples como reducir el consumo de energía, podemos revertir el daño. En EcoHuella, te guiamos con planes personalizados.</p>
+    <ul>
+      <li>Consejo: Cambia a bombillas LED para ahorrar energía.</li>
+      <li>Únete a nuestros retos semanales.</li>
+      <li>Comparte tu progreso en nuestra comunidad.</li>
+    </ul>
+    <p>¡Juntos, podemos crear un futuro sostenible!</p>
+  </section>
+
+  <!-- Modal emergente con el foco en el ODS 13 -->
+  <div id="odsModal">
+    <div id="odsModal-content"></div>
+      <h3>ODS 13: Acción por el Clima</h3>
+      <p>El ODS 13 busca tomar medidas urgentes contra el cambio climático. En EcoHuella, nos enfocamos en iniciativas como la reducción de emisiones y la conservación.</p>
+      <button onclick="hideODSModal()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Preguntas frecuentes en formato acordeón -->
+  <section id="faq" style="background:#f7f7f7; padding:60px 20px; text-align:center; display:flex; justify-content:center; align-items:flex-start; gap:40px;">
+    <div style="position:absolute; left:0; right:0; top:-40px; text-align:center;">
+      <h2 style="color:#27ae60; font-size:2rem; margin-bottom:25px;">Preguntas Frecuentes</h2>
+    </div>
+    <div class="faq-list" style="max-width:700px; margin:auto; text-align:left; flex:1;">
+      <div class="faq-item">
+        <button class="faq-question">¿Qué es EcoHuella?</button>
+        <div class="faq-answer">EcoHuella es una plataforma que te ayuda a reducir tu huella ecológica y conectar con comunidades ambientales.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">¿Cómo puedo unirme?</button>
+        <div class="faq-answer">Solo debes registrarte y comenzar a participar en los retos y actividades.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">¿Tiene algún costo?</button>
+        <div class="faq-answer">No, EcoHuella es completamente gratuita para todos los usuarios.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">¿Cómo se calculan los EcoPuntos?</button>
+        <div class="faq-answer">Los ecoPuntos se obtienen al completar retos y actividades sostenibles dentro de la plataforma.</div>
+      </div>
+    </div>
+    <div class="faq-img" style="flex:0 0 500px; display:flex; justify-content:center; align-items:center;">
+      <img src="imagenes/planta.png" alt="Planta EcoHuella" style="max-width:500px; width:100%; border-radius:18px; box-shadow:0 4px 18px rgba(39,174,96,0.12);">
+    </div>
+  </section>
+
+  <!-- Historias de la comunidad y formulario para sumar la tuya -->
+  <section id="testimonios" style="background:url('imagenes/personas.png') center center / cover no-repeat; padding:60px 20px; text-align:center;">
+    <h2 style="color:#fff; font-size:2.5rem; font-weight:800; margin-bottom:25px;">Testimonios</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px; max-width:900px; margin:auto;">
+      <div style="background:#e6f7e6; border-radius:12px; padding:25px; max-width:350px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <p style="font-style:italic;">“EcoHuella me motivó a cambiar mis hábitos y ahora reciclo mucho más. ¡Me encanta la comunidad!”</p>
+        <span style="font-weight:bold; color:#27ae60;">— Ana, Bogotá</span>
+      </div>
+      <div style="background:#e6f7e6; border-radius:12px; padding:25px; max-width:350px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <p style="font-style:italic;">“Gracias a los retos, he reducido mi consumo de agua y energía. ¡Recomiendo EcoHuella a todos!”</p>
+        <span style="font-weight:bold; color:#27ae60;">— Luis, Medellín</span>
+      </div>
+      <div style="background:#e6f7e6; border-radius:12px; padding:25px; max-width:350px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <p style="font-style:italic;">“La plataforma es fácil de usar y los consejos son muy útiles. ¡Ya soy parte del cambio!”</p>
+        <span style="font-weight:bold; color:#27ae60;">— Sofía, Cali</span>
+      </div>
+    </div>
+    <div style="margin-top:40px; max-width:500px; margin-left:auto; margin-right:auto;">
+      <h3 style="color:#fff; font-size:1.35rem; font-weight:700; margin-bottom:15px;">¡Comparte tu testimonio!</h3>
+      <form id="form-testimonio" style="display:flex; flex-direction:column; gap:15px;">
+        <input type="text" id="nombreTestimonio" placeholder="Tu nombre" required style="padding:10px; border-radius:8px; border:1px solid #e6f7e6;">
+        <input type="text" id="ciudadTestimonio" placeholder="Ciudad" required style="padding:10px; border-radius:8px; border:1px solid #e6f7e6;">
+        <textarea id="textoTestimonio" placeholder="Escribe tu testimonio aquí..." required style="padding:10px; border-radius:8px; border:1px solid #e6f7e6; min-height:80px;"></textarea>
+        <button type="submit" style="background:#27ae60; color:white; border:none; border-radius:8px; padding:12px 0; font-weight:bold; cursor:pointer;">Enviar Testimonio</button>
+      </form>
+      <div id="mensaje-testimonio" style="color:#27ae60; font-weight:bold; margin-top:15px; display:none;"></div>
+    </div>
+  </section>
+
+  <!-- Lógica que maneja personalización, animaciones y menús -->
+  <script>
+    const heroAction = document.getElementById("hero-action");
+    const btnLogin = document.getElementById("btnLogin");
+    const storedName = sessionStorage.getItem('ecoUserName');
+
+    if (storedName) {
+      const shortName = storedName.split(' ')[0];
+      heroAction.innerHTML = `
+        <h3 style="animation: fadeUp 1.8s ease; margin-bottom: 18px;">¡Qué gusto verte, ${shortName}! 🌿</h3>
+        <button onclick="window.location.href='Pages/retos.html'">Ir a mis retos</button>
+      `;
+      btnLogin.textContent = `¡Hola! ${shortName}`;
+      btnLogin.onclick = null;
+    } else {
+      heroAction.innerHTML = `<button onclick="window.location.href='Pages/registro.html'">Únete a la comunidad ahora</button>`;
+      btnLogin.textContent = 'Únete';
+      btnLogin.onclick = () => (window.location.href = "Pages/registro.html");
+    }
+
+      // Observamos las secciones para activar la animación al hacer scroll
+      document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.classList.add('in-view');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+
+    function showODSModal() {
+      document.getElementById('odsModal').style.display = 'flex';
+    }
+
+    function hideODSModal() {
+      document.getElementById('odsModal').style.display = 'none';
+    }
+
+    // Interacción del acordeón de preguntas frecuentes
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const answer = this.nextElementSibling;
+        if (answer.style.maxHeight) {
+          answer.style.maxHeight = null;
+          answer.style.opacity = 0;
+          this.classList.remove('active');
+        } else {
+          document.querySelectorAll('.faq-answer').forEach(a => {
+            a.style.maxHeight = null;
+            a.style.opacity = 0;
+          });
+          document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          answer.style.opacity = 1;
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // Guardamos testimonios nuevos y mostramos un agradecimiento rápido
+    document.getElementById('form-testimonio').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('nombreTestimonio').value;
+      const ciudad = document.getElementById('ciudadTestimonio').value;
+      const texto = document.getElementById('textoTestimonio').value;
+      const testimoniosDiv = document.querySelector('#testimonios > div');
+      const nuevoTestimonio = document.createElement('div');
+      nuevoTestimonio.style.background = '#e6f7e6';
+      nuevoTestimonio.style.borderRadius = '12px';
+      nuevoTestimonio.style.padding = '25px';
+      nuevoTestimonio.style.maxWidth = '350px';
+      nuevoTestimonio.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+      nuevoTestimonio.style.marginTop = '10px';
+      nuevoTestimonio.innerHTML = `<p style='font-style:italic;'>“${texto}”</p><span style='font-weight:bold; color:#27ae60;'>— ${nombre}, ${ciudad}</span>`;
+      testimoniosDiv.appendChild(nuevoTestimonio);
+      document.getElementById('form-testimonio').reset();
+      const mensaje = document.getElementById('mensaje-testimonio');
+      mensaje.textContent = '¡Gracias por compartir tu testimonio!';
+      mensaje.style.display = 'block';
+      setTimeout(() => mensaje.style.display = 'none', 3000);
+    });
+
+    // Scroll suave cuando alguien usa el menú de navegación
+    function scrollToSection(id) {
+      const section = document.getElementById(id);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Toggle de los menús desplegables tanto de Inicio como del perfil
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.querySelector('.dropdown');
+      const dropbtn = dropdown.querySelector('.dropbtn');
+      dropbtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('open');
+        }
+      });
+      // Menú perfil
+      const perfilDropdown = document.querySelector('.perfil-dropdown');
+      const perfilBtn = perfilDropdown.querySelector('.dropbtn');
+      perfilBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        perfilDropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e) {
+        if (!perfilDropdown.contains(e.target)) {
+          perfilDropdown.classList.remove('open');
+        }
+      });
+      // Cerrar sesión desde menú perfil
+      const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
+      if (cerrarSesionBtn) {
+        cerrarSesionBtn.addEventListener('click', () => {
+          sessionStorage.removeItem('ecoUserName');
+          sessionStorage.removeItem('ecoUserEmail');
+          window.location.reload();
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

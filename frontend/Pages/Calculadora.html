@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Huella Ecológica</title>
+  <link rel="stylesheet" href="../style.css" />
+  <script defer src="../script.js"></script>
+  <!-- apartado: el script principal está en ../script.js -->
+</head>
+<body class="calc-body">
+  <!-- apartado: fondo animado y capa de luz -->
+  <div class="calc-bg" aria-hidden="true"></div>
+  <div class="calc-glow" aria-hidden="true"></div>
+
+  <!-- apartado: contenedor raíz de la calculadora -->
+  <main class="calc-root" data-page="calculator">
+
+    <!-- apartado: acciones rápidas en un menú desplegable superior -->
+    <div class="calc-actions" data-actions>
+      <button type="button" id="calcActionsToggle" class="btn-outline-alt calc-actions__toggle" aria-haspopup="true" aria-expanded="false" aria-controls="calcActionsMenu">
+        Acciones rápidas
+        <span class="calc-actions__icon" aria-hidden="true">▼</span>
+      </button>
+  <div id="calcActionsMenu" class="calc-actions__menu" role="menu" aria-labelledby="calcActionsToggle" hidden>
+        <a href="../index.html" class="calc-actions__link" role="menuitem">Volver al inicio</a>
+        <a href="MiPerfil.html" class="calc-actions__link" role="menuitem">Ver mi progreso</a>
+        <a href="retos.html" class="calc-actions__link" role="menuitem">Aceptar nuevos retos</a>
+      </div>
+    </div>
+
+    <!-- apartado: cabecera con mensaje principal y KPI rápidos -->
+    <section class="calc-hero">
+      <div class="calc-hero__info">
+        <h1 class="calc-hero__title">Calcula tu Huella Ecológica</h1>
+        <p class="calc-hero__subtitle">Mide tu impacto, descubre dónde puedes mejorar y construye un plan de acción alineado con los objetivos de EcoHuella.</p>
+
+        <div class="calc-hero__tags">
+          <span class="calc-tag">Habitabilidad sostenible</span>
+          <span class="calc-tag">Movilidad consciente</span>
+          <span class="calc-tag">Consumo circular</span>
+        </div>
+      </div>
+
+      <aside class="calc-kpis" aria-label="Indicadores rápidos">
+        <div class="calc-kpi">
+          <span class="calc-kpi__label">Objetivo anual</span>
+          <strong id="kpiGoal" class="calc-kpi__value">40%</strong>
+          <span class="calc-kpi__hint">Reducción acumulada</span>
+        </div>
+        <div class="calc-kpi">
+          <span class="calc-kpi__label">Tu tendencia</span>
+          <strong id="kpiTrend" class="calc-kpi__value">—</strong>
+          <span class="calc-kpi__hint">Actualizado al último cálculo</span>
+        </div>
+        <div class="calc-kpi">
+          <span class="calc-kpi__label">Días consistentes</span>
+          <strong id="kpiStreak" class="calc-kpi__value">0</strong>
+          <span class="calc-kpi__hint">Sesiones registradas</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- apartado: sección principal con formulario y resultados -->
+    <section class="calc-workspace">
+      <form id="calcForm" class="calc-panel calc-panel--form" aria-label="Formulario para calcular la huella ecológica">
+        <header class="panel-header">
+          <h2>Mapea tus hábitos</h2>
+          <p>Desliza y ajusta las categorías clave, luego afina con tus hábitos reales para obtener una estimación personalizada.</p>
+        </header>
+
+        <!-- apartado: controles tipo slider -->
+        <div class="slider-grid">
+          <label class="slider-field">Energía en el hogar
+            <input id="inpEnergia" type="range" min="0" max="10" value="4" step="1" />
+            <span class="slider-value" data-for="inpEnergia">4 / 10</span>
+          </label>
+          <label class="slider-field">Transporte diario
+            <input id="inpTransporte" type="range" min="0" max="10" value="5" step="1" />
+            <span class="slider-value" data-for="inpTransporte">5 / 10</span>
+          </label>
+          <label class="slider-field">Alimentación
+            <input id="inpAlimentacion" type="range" min="0" max="10" value="6" step="1" />
+            <span class="slider-value" data-for="inpAlimentacion">6 / 10</span>
+          </label>
+          <label class="slider-field">Residuos y reciclaje
+            <input id="inpResiduos" type="range" min="0" max="10" value="4" step="1" />
+            <span class="slider-value" data-for="inpResiduos">4 / 10</span>
+          </label>
+          <label class="slider-field">Consumo responsable
+            <input id="inpConsumo" type="range" min="0" max="10" value="5" step="1" />
+            <span class="slider-value" data-for="inpConsumo">5 / 10</span>
+          </label>
+        </div>
+
+        <!-- apartado: ajustes finos y hábitos específicos -->
+        <div class="habit-grid">
+          <div class="habit-toggle">
+            <input type="checkbox" id="chkRenovable" />
+            <label for="chkRenovable">Uso energía renovable en casa</label>
+          </div>
+          <div class="habit-toggle">
+            <input type="checkbox" id="chkCarpool" />
+            <label for="chkCarpool">Compartes transporte o usas bici</label>
+          </div>
+          <div class="habit-toggle">
+            <input type="checkbox" id="chkLocalFood" />
+            <label for="chkLocalFood">Prefieres alimentos locales/estacionales</label>
+          </div>
+          <div class="habit-select">
+            <label for="selVivienda">Tipo de vivienda</label>
+            <select id="selVivienda">
+              <option value="departamento">Departamento</option>
+              <option value="casa">Casa</option>
+              <option value="compartida">Compartida</option>
+              <option value="rural">Rural</option>
+            </select>
+          </div>
+          <div class="habit-select">
+            <label for="selEnergia">Fuente principal de energía</label>
+            <select id="selEnergia">
+              <option value="mixta">Mixta</option>
+              <option value="fossil">Fósil</option>
+              <option value="hidro">Hidroeléctrica</option>
+              <option value="solar">Solar/Eólica</option>
+            </select>
+          </div>
+        </div>
+
+        <footer class="panel-footer">
+          <div class="panel-footer__left">
+            <button id="btnCalcular" type="button" class="btn-outline btn-action">Calcular impacto</button>
+            <button id="btnReiniciar" type="button" class="btn-outline btn-action">Restablecer</button>
+          </div>
+          <div class="panel-footer__right">
+            <button id="btnGuardarPlan" type="button" class="btn-outline">Guardar plan</button>
+            <button id="btnExportar" type="button" class="btn-outline">Exportar CSV</button>
+          </div>
+        </footer>
+      </form>
+
+      <!-- apartado: panel de resultados con visualizaciones -->
+      <section class="calc-panel calc-panel--results" aria-live="polite">
+        <header class="panel-header">
+          <h2>Resultados y oportunidades</h2>
+          <p class="panel-subtitle">Cada cálculo actualiza tu desempeño, proyecta mejoras y desbloquea recomendaciones accionables.</p>
+        </header>
+
+        <div class="result-summary">
+          <div class="score-ring">
+            <svg viewBox="0 0 120 120" class="score-ring__svg" aria-hidden="true">
+              <circle class="score-ring__bg" cx="60" cy="60" r="52"></circle>
+              <circle id="scoreRing" class="score-ring__fg" cx="60" cy="60" r="52" stroke-dasharray="0 360"></circle>
+            </svg>
+            <div class="score-ring__value" id="scoreValue">—</div>
+          </div>
+          <div class="score-copy">
+            <h3 id="scoreTitle">Tu resultado aparecerá aquí</h3>
+            <p id="scoreDescription">Completa los campos y pulsa “Calcular impacto” para generar tu medición.</p>
+            <div class="score-chip" id="scoreBadge">Nivel pendiente</div>
+          </div>
+        </div>
+
+        <!-- apartado: barras comparativas por categoría -->
+        <div class="breakdown" id="breakdown"></div>
+
+        <!-- apartado: proyección y metas -->
+        <div class="projection">
+          <header>
+            <h3>Escenario proyectado</h3>
+            <div class="projection__control">
+              <label for="inpMeta">Meta de mejora</label>
+              <input id="inpMeta" type="range" min="5" max="40" value="20" step="5" />
+              <span class="slider-value" data-for="inpMeta">20%</span>
+            </div>
+          </header>
+          <div class="projection__cards">
+            <article class="projection-card">
+              <span class="projection-card__label">Escenario actual</span>
+              <strong id="projActual" class="projection-card__value">—</strong>
+            </article>
+            <article class="projection-card">
+              <span class="projection-card__label">Con tu meta</span>
+              <strong id="projMeta" class="projection-card__value">—</strong>
+            </article>
+            <article class="projection-card">
+              <span class="projection-card__label">Impacto anual</span>
+              <strong id="projImpacto" class="projection-card__value">—</strong>
+            </article>
+          </div>
+        </div>
+
+        <!-- apartado: acciones recomendadas -->
+        <section class="action-plan">
+          <header>
+            <h3>Plan inteligente</h3>
+            <p>Seleccionamos acciones de alto impacto según tus categorías más cargadas.</p>
+          </header>
+          <ul id="planList" class="action-plan__list"></ul>
+        </section>
+
+        <!-- apartado: log de sesiones y streak -->
+        <section class="history">
+          <header>
+            <h3>Historial inteligente</h3>
+            <p>Monitoriza tu progreso y comparte logros con tu comunidad EcoHuella.</p>
+          </header>
+          <div id="historyList" class="history__grid" aria-live="polite"></div>
+        </section>
+      </section>
+    </section>
+
+  </main>
+
+  <canvas id="confettiCanvas" class="confetti-layer" aria-hidden="true"></canvas>
+</body>
+</html>

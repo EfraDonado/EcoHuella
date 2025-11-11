@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil | EcoHuella</title>
+  <style>
+    :root {
+      --green-primary: #1f8a5b;
+      --green-secondary: #35c47c;
+      --green-soft: #ecf9f1;
+      --text-dark: #233128;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(155deg, #f1fff5 0%, #dff5e6 50%, #f1fff5 100%);
+      color: var(--text-dark);
+    }
+
+    .perfil-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 18px 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .perfil-hero {
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 32px;
+      box-shadow: 0 24px 68px rgba(31, 138, 91, 0.14);
+      padding: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .perfil-meta {
+      flex: 1 1 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .perfil-meta span {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(35, 49, 40, 0.7);
+    }
+
+    .perfil-meta h1 {
+      margin: 0;
+      font-size: 2.4rem;
+      color: var(--green-primary);
+    }
+
+    .perfil-meta p {
+      margin: 0;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .perfil-stats {
+      flex: 1 1 280px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--green-soft);
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(31, 138, 91, 0.08);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(53, 196, 124, 0.2) 0%, rgba(53, 196, 124, 0) 70%);
+      bottom: -40px;
+      right: -30px;
+    }
+
+    .stat-card span {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .stat-card strong {
+      font-size: 1.8rem;
+      color: var(--green-primary);
+    }
+
+    .perfil-main {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 26px;
+    }
+
+    .panel--wide {
+      grid-column: 1 / -1;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 28px;
+      box-shadow: 0 20px 58px rgba(27, 121, 80, 0.14);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .panel-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: var(--green-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: rgba(35, 49, 40, 0.72);
+    }
+
+    .huella-resumen {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .huella-score {
+      background: var(--green-soft);
+      border-radius: 22px;
+      padding: 24px;
+      display: grid;
+      gap: 12px;
+      box-shadow: inset 0 0 0 1px rgba(31,138,91,0.12);
+    }
+
+    .huella-score__valor {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--green-primary);
+    }
+
+    .huella-score__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      background: rgba(31,138,91,0.12);
+      color: var(--green-primary);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .huella-score__badge.badge--verde {
+      background: rgba(39, 174, 96, 0.16);
+      color: #1e7b4a;
+    }
+
+    .huella-score__badge.badge--intermedio {
+      background: rgba(243, 156, 18, 0.18);
+      color: #c27b12;
+    }
+
+    .huella-score__badge.badge--critico {
+      background: rgba(231, 76, 60, 0.18);
+      color: #c0392b;
+    }
+
+    .huella-score__meta,
+    .huella-score__objetivo {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: rgba(35, 49, 40, 0.8);
+    }
+
+    .huella-historial {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .huella-historial h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: var(--green-primary);
+    }
+
+    .huella-historial__lista {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .huella-historial__item {
+      background: rgba(255,255,255,0.9);
+      border-radius: 18px;
+      padding: 14px 18px;
+      box-shadow: 0 12px 24px rgba(31,138,91,0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .huella-historial__item span {
+      font-weight: 600;
+      color: var(--green-primary);
+    }
+
+    .logros-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .logro-card {
+      position: relative;
+      border-radius: 26px;
+      padding: 22px 26px;
+      background: linear-gradient(140deg, rgba(243, 255, 247, 0.92), rgba(224, 247, 234, 0.9));
+      box-shadow: 0 18px 34px rgba(31, 138, 91, 0.18);
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      overflow: hidden;
+    }
+
+    .logro-card::after {
+      content: '';
+      position: absolute;
+      right: -28px;
+      bottom: -28px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(53,196,124,0.18) 0%, rgba(53,196,124,0) 68%);
+    }
+
+    .logro-card__icon {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.9rem;
+      background: rgba(31, 138, 91, 0.12);
+      box-shadow: 0 10px 20px rgba(31, 138, 91, 0.18);
+    }
+
+    .logro-card__icon--rare {
+      background: rgba(241, 196, 15, 0.12);
+      box-shadow: 0 10px 26px rgba(241, 196, 15, 0.26);
+    }
+
+    .logro-card__icon--legendary {
+      background: rgba(142, 68, 173, 0.16);
+      box-shadow: 0 12px 28px rgba(142, 68, 173, 0.32);
+    }
+
+    .logro-card__body {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .logro-card__badge {
+      width: fit-content;
+      background: rgba(31, 138, 91, 0.12);
+      color: var(--green-primary);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      letter-spacing: 1.4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .logro-card__badge.badge-rare {
+      background: rgba(241, 196, 15, 0.14);
+      color: #8e6b00;
+    }
+
+    .logro-card__badge.badge-legendary {
+      background: rgba(142, 68, 173, 0.18);
+      color: #6c2f89;
+    }
+
+    .logro-card strong {
+      font-size: 1.18rem;
+      color: var(--green-primary);
+    }
+
+    .logro-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: rgba(35, 49, 40, 0.78);
+      line-height: 1.55;
+    }
+
+    .logro-card.logro-rare {
+      background: linear-gradient(140deg, rgba(255, 249, 229, 0.95), rgba(241, 211, 69, 0.38));
+    }
+
+    .logro-card.logro-legendary {
+      background: linear-gradient(140deg, rgba(250, 240, 255, 0.94), rgba(195, 155, 211, 0.42));
+    }
+
+    .resumen-user {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.95rem;
+    }
+
+    .retos-lista, .premios-lista {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card-actividad {
+      border-radius: 20px;
+      padding: 20px;
+      background: linear-gradient(125deg, rgba(31,138,91,0.06), rgba(53,196,124,0.08));
+      box-shadow: 0 14px 34px rgba(31, 138, 91, 0.12);
+      display: grid;
+      gap: 6px;
+    }
+
+    .card-actividad strong {
+      font-size: 1.1rem;
+    }
+
+    .card-actividad span {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .pill {
+      background: rgba(31, 138, 91, 0.14);
+      color: var(--green-primary);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill--insignia {
+      background: linear-gradient(135deg, rgba(249,215,28,0.24), rgba(241,196,15,0.2));
+      color: #8e6b00;
+      box-shadow: 0 8px 18px rgba(241,196,15,0.24);
+    }
+
+    .call-to-action {
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-principal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: var(--green-primary);
+      color: #fff;
+      box-shadow: 0 14px 26px rgba(31, 138, 91, 0.24);
+      text-decoration: none;
+    }
+
+    .btn-secundario {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: rgba(31, 138, 91, 0.12);
+      color: var(--green-primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .mensaje-vacio {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(31,138,91,0.08);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--green-primary);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 999px;
+      box-shadow: 0 16px 32px rgba(31, 138, 91, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .perfil-main {
+        grid-template-columns: 1fr;
+      }
+
+      .huella-resumen {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .perfil-hero {
+        padding: 28px;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="perfil-layout">
+    <header class="perfil-hero">
+      <div class="perfil-meta">
+        <span>Mi viaje sostenible</span>
+        <h1 id="perfilSaludo">Hola, EcoHuella</h1>
+        <p id="perfilDescripcion">Conecta tu cuenta para seguir viendo cómo tus acciones suman al planeta.</p>
+        <div class="resumen-user" id="perfilDatos"></div>
+        <div class="call-to-action">
+          <a class="btn-principal" href="retos.html">Ir a mis retos</a>
+          <button class="btn-secundario" id="btnCerrarSesion" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+      <div class="perfil-stats">
+        <div class="stat-card">
+          <span>Eco puntos disponibles</span>
+          <strong id="statPuntos">0</strong>
+          <span id="statActualizado">Actualizado hace un momento</span>
+        </div>
+        <div class="stat-card">
+          <span>Retos completados</span>
+          <strong id="statRetos">0</strong>
+          <span id="statRetosDetalle">Completa tu primer reto</span>
+        </div>
+        <div class="stat-card">
+          <span>Premios canjeados</span>
+          <strong id="statPremios">0</strong>
+          <span id="statPremiosDetalle">Ningún premio todavía</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="perfil-main">
+      <section class="panel panel--wide" id="panelHuella">
+        <div class="panel-header-flex">
+          <h2>Mi impacto calculado</h2>
+          <a class="btn-secundario" href="Calculadora.html">Actualizar cálculo</a>
+        </div>
+        <div id="calcEmptyState" class="mensaje-vacio">Cuando realices tu primera medición en la calculadora, aquí verás tu puntaje, tu meta y la evolución de tu huella ecológica.</div>
+        <div id="calcResumen" class="huella-resumen" hidden>
+          <div class="huella-score">
+            <div class="huella-score__valor" id="calcScoreValue">--</div>
+            <div class="huella-score__badge" id="calcBadge">Nivel pendiente</div>
+            <p class="huella-score__narrativa" id="calcNarrativa">Tus próximas acciones aparecerán aquí.</p>
+            <div class="huella-score__meta">Meta de mejora: <span id="calcMeta">--</span></div>
+            <div class="huella-score__objetivo">Escenario proyectado: <span id="calcProyeccion">--</span></div>
+          </div>
+          <div class="huella-historial">
+            <h3>Últimos cálculos</h3>
+            <ul class="huella-historial__lista" id="calcHistory"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panelRetos">
+        <h2>Progreso reciente</h2>
+        <div class="retos-lista" id="listaRetos"></div>
+      </section>
+      <aside class="panel" id="panelPremios">
+        <h2>Premios canjeados</h2>
+        <div class="premios-lista" id="listaPremios"></div>
+      </aside>
+      <section class="panel panel--wide" id="panelLogros">
+        <div class="panel-header-flex">
+          <h2>Logros desbloqueados</h2>
+          <a class="btn-secundario" href="retos.html#retos-disponibles">Suma nuevos retos</a>
+        </div>
+        <p class="panel-subtitle">Cada insignia refleja tu constancia. Mantén tu racha completando retos, canjeando premios y manteniendo tu huella en el nivel verde.</p>
+        <div class="logros-grid" id="logrosGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_URL = window.__ECO_API_URL || (() => {
+      const { hostname } = window.location;
+      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+      return isLocal ? 'http://localhost:4000/api' : 'https://ecohuella.onrender.com/api';
+    })();
+
+    if (!window.__ECO_API_URL) {
+      window.__ECO_API_URL = API_URL;
+    }
+    const userName = sessionStorage.getItem('ecoUserName') || 'EcoHuella';
+    const userEmail = sessionStorage.getItem('ecoUserEmail');
+
+    const perfilSaludo = document.getElementById('perfilSaludo');
+    const perfilDescripcion = document.getElementById('perfilDescripcion');
+    const perfilDatos = document.getElementById('perfilDatos');
+    const listaRetos = document.getElementById('listaRetos');
+    const listaPremios = document.getElementById('listaPremios');
+    const calcEmptyState = document.getElementById('calcEmptyState');
+    const calcResumen = document.getElementById('calcResumen');
+    const calcScoreValue = document.getElementById('calcScoreValue');
+    const calcBadge = document.getElementById('calcBadge');
+    const calcNarrativa = document.getElementById('calcNarrativa');
+    const calcMeta = document.getElementById('calcMeta');
+    const calcProyeccion = document.getElementById('calcProyeccion');
+    const calcHistoryList = document.getElementById('calcHistory');
+    const logrosGrid = document.getElementById('logrosGrid');
+    const statPuntos = document.getElementById('statPuntos');
+    const statRetos = document.getElementById('statRetos');
+    const statPremios = document.getElementById('statPremios');
+    const statActualizado = document.getElementById('statActualizado');
+    const statRetosDetalle = document.getElementById('statRetosDetalle');
+    const statPremiosDetalle = document.getElementById('statPremiosDetalle');
+    const toast = document.getElementById('toast');
+    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+
+    const mostrarToast = (mensaje) => {
+      toast.textContent = mensaje;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2400);
+    };
+
+    const formatearFecha = (fechaStr) => {
+      if (!fechaStr) {
+        return 'Hace un momento';
+      }
+      const fecha = new Date(fechaStr);
+      return fecha.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    const formatearTituloReto = (codigo) => {
+      const limpio = codigo.replace(/^reto-/, '');
+      return limpio.split('-').map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1)).join(' ');
+    };
+
+    const projectScore = (score, metaPercent) => {
+      const factor = 1 - (metaPercent / 100);
+      return Math.max(0, Math.round((score ?? 0) * factor));
+    };
+
+    const setBadgeClass = (badge) => {
+      calcBadge.classList.remove('badge--verde', 'badge--intermedio', 'badge--critico');
+      const normalized = (badge || '').toLowerCase();
+      if (normalized.includes('verde')) {
+        calcBadge.classList.add('badge--verde');
+      } else if (normalized.includes('intermedio')) {
+        calcBadge.classList.add('badge--intermedio');
+      } else if (normalized.includes('crítico') || normalized.includes('critico')) {
+        calcBadge.classList.add('badge--critico');
+      }
+    };
+
+    const renderCalculadora = (historial) => {
+      if (!Array.isArray(historial) || !historial.length) {
+        calcResumen.hidden = true;
+        calcEmptyState.hidden = false;
+        calcHistoryList.innerHTML = '';
+        return { mejorPuntaje: null, total: 0 };
+      }
+
+      calcEmptyState.hidden = true;
+      calcResumen.hidden = false;
+
+      const latest = historial[0];
+      const metaPercent = Number.isFinite(latest.metaPercent) ? latest.metaPercent : 20;
+      const projected = projectScore(latest.score ?? 0, metaPercent);
+      const mejorPuntaje = historial.reduce((min, item) => Math.min(min, item.score ?? 100), latest.score ?? 100);
+
+      calcScoreValue.textContent = `${latest.score ?? 0} pts`;
+      calcBadge.textContent = latest.badge || 'Nivel pendiente';
+      setBadgeClass(latest.badge || '');
+      calcNarrativa.textContent = latest.title
+        ? `${latest.title} ${latest.description || ''}`.trim()
+        : 'Realiza un nuevo cálculo para obtener recomendaciones personalizadas.';
+      calcMeta.textContent = `${metaPercent}%`;
+      calcProyeccion.textContent = `${projected} pts`;
+
+      calcHistoryList.innerHTML = '';
+      historial.slice(0, 5).forEach((item) => {
+        const li = document.createElement('li');
+        li.className = 'huella-historial__item';
+        li.innerHTML = `
+          <div>
+            <strong>${item.score} pts</strong>
+            <span>${item.badge || '—'}</span>
+          </div>
+          <small>${formatearFecha(item.dateISO)}</small>
+        `;
+        calcHistoryList.appendChild(li);
+      });
+
+      return { mejorPuntaje, total: historial.length };
+    };
+
+    const renderLogros = (logros) => {
+      if (!logros.length) {
+        logrosGrid.innerHTML = '<div class="mensaje-vacio">Completa retos, canjea premios e impulsa tu huella verde para desbloquear reconocimientos especiales.</div>';
+        return;
+      }
+
+      logrosGrid.innerHTML = '';
+      const iconByRarity = {
+        common: '🌱',
+        rare: '🌟',
+        legendary: '💫'
+      };
+      logros.forEach((logro) => {
+        const card = document.createElement('article');
+        card.className = `logro-card ${logro.rarity ? `logro-${logro.rarity}` : ''}`.trim();
+        const icon = iconByRarity[logro.rarity] || '🌱';
+        const badgeClass = logro.rarity ? `badge-${logro.rarity}` : '';
+        card.innerHTML = `
+          <div class="logro-card__icon ${logro.rarity ? `logro-card__icon--${logro.rarity}` : ''}">${icon}</div>
+          <div class="logro-card__body">
+            <span class="logro-card__badge ${badgeClass}">${logro.rarityLabel || 'Logro'}</span>
+            <strong>${logro.title}</strong>
+            <p>${logro.description}</p>
+          </div>
+        `;
+        logrosGrid.appendChild(card);
+      });
+    };
+
+    const buildLogros = (progreso, historialCalculadora) => {
+      const logros = [];
+      const agregado = new Set();
+
+      const addLogro = (key, data) => {
+        if (agregado.has(key)) return;
+        agregado.add(key);
+        logros.push(data);
+      };
+
+      const retosCompletados = progreso.challenges?.length || 0;
+      const premios = progreso.rewards || [];
+
+      if (retosCompletados >= 1) {
+        addLogro('primer-reto', {
+          title: 'Primer paso verde',
+          description: 'Completaste tu primer reto sostenible. El inicio de una gran racha.',
+          rarity: 'common',
+          rarityLabel: 'Común'
+        });
+      }
+
+      if (retosCompletados >= 5) {
+        addLogro('retos-5', {
+          title: 'Embajador de hábitos',
+          description: 'Has completado cinco retos y tu constancia comienza a inspirar a otros.',
+          rarity: 'rare',
+          rarityLabel: 'Raro'
+        });
+      }
+
+      if (retosCompletados >= 10) {
+        addLogro('retos-10', {
+          title: 'Maratón sostenible',
+          description: 'Diez retos completados. Tu impacto ya se siente en tu comunidad.',
+          rarity: 'legendary',
+          rarityLabel: 'Épico'
+        });
+      }
+
+      const insignia = premios.find((premio) => premio.code === 'premio-insignia');
+      if (insignia) {
+        addLogro('insignia-guardian', {
+          title: 'Insignia Guardián EcoHuella',
+          description: 'Canjeaste la insignia oficial. Un reconocimiento reservado para quienes sostienen el cambio.',
+          rarity: 'legendary',
+          rarityLabel: 'Legendario'
+        });
+      }
+
+      if (premios.length >= 3) {
+        addLogro('premios-coleccionista', {
+          title: 'Coleccionista verde',
+          description: 'Tres o más premios canjeados demuestran tu visión a largo plazo.',
+          rarity: 'rare',
+          rarityLabel: 'Raro'
+        });
+      }
+
+      if (Array.isArray(historialCalculadora) && historialCalculadora.length) {
+        const mejorPuntaje = historialCalculadora.reduce((min, item) => Math.min(min, item.score ?? 100), 100);
+        if (mejorPuntaje <= 33) {
+          addLogro('calc-verde', {
+            title: 'Huella en zona verde',
+            description: 'Mantienes una huella sobresaliente. Comparte tu estrategia con la comunidad.',
+            rarity: 'rare',
+            rarityLabel: 'Raro'
+          });
+        }
+
+        if (historialCalculadora.length >= 3) {
+          const first = historialCalculadora[historialCalculadora.length - 1]?.score ?? 100;
+          const latest = historialCalculadora[0]?.score ?? 100;
+          if (first - latest >= 15) {
+            addLogro('calc-mejora', {
+              title: 'Progreso medible',
+              description: 'Redujiste tu puntaje en al menos 15 puntos desde tu primer cálculo registrado.',
+              rarity: 'common',
+              rarityLabel: 'Común'
+            });
+          }
+        }
+      }
+
+      return logros;
+    };
+
+    const cargarHistorialLocalCalculadora = (email) => {
+      const key = email ? `eco_calculator_history_${email}` : 'eco_calculator_history_v2';
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.warn('No se pudo leer el historial local de la calculadora.', error);
+        return [];
+      }
+    };
+
+    const renderRetos = (retos) => {
+      if (!retos.length) {
+        listaRetos.innerHTML = '<div class="mensaje-vacio">Cuando completes tus retos verdes aparecerán aquí con todos los detalles. ¡Explora la sección de retos y suma tus primeros puntos!</div>';
+        return;
+      }
+
+      listaRetos.innerHTML = '';
+      retos.forEach((reto) => {
+        const item = document.createElement('article');
+        item.className = 'card-actividad';
+        item.innerHTML = `
+          <span class="pill">${reto.points} pts</span>
+          <strong>${formatearTituloReto(reto.code)}</strong>
+          <span>${formatearFecha(reto.completed_at)}</span>
+        `;
+        listaRetos.appendChild(item);
+      });
+    };
+
+    const renderPremios = (premios) => {
+      if (!premios.length) {
+        listaPremios.innerHTML = '<div class="mensaje-vacio">Aún no hay premios canjeados. Cuando reúnas suficientes puntos podrás desbloquear experiencias especiales aquí mismo.</div>';
+        return;
+      }
+
+      listaPremios.innerHTML = '';
+      premios.forEach((premio) => {
+        const item = document.createElement('article');
+        item.className = 'card-actividad';
+        const esInsignia = premio.code === 'premio-insignia';
+        item.innerHTML = `
+          <div class="pill-group">
+            <span class="pill">-${premio.cost} pts</span>
+            ${esInsignia ? '<span class="pill pill--insignia">Insignia legendaria</span>' : ''}
+          </div>
+          <strong>${premio.name}</strong>
+          <span>${formatearFecha(premio.redeemed_at)}</span>
+        `;
+        listaPremios.appendChild(item);
+      });
+    };
+
+    const actualizarResumen = (progreso) => {
+      statPuntos.textContent = progreso.points || 0;
+      statRetos.textContent = progreso.challenges.length;
+      statPremios.textContent = progreso.rewards.length;
+      statActualizado.textContent = progreso.updatedAt ? `Actualizado ${formatearFecha(progreso.updatedAt)}` : 'Actualizado recién';
+      if (progreso.challenges.length >= 5) {
+        statRetosDetalle.textContent = 'Racha imparable de retos.';
+      } else if (progreso.challenges.length) {
+        statRetosDetalle.textContent = 'Sigue sumando nuevas historias';
+      } else {
+        statRetosDetalle.textContent = 'Completa tu primer reto';
+      }
+      const tieneInsignia = progreso.rewards.some((premio) => premio.code === 'premio-insignia');
+      if (tieneInsignia) {
+        statPremiosDetalle.textContent = 'Insignia legendaria desbloqueada.';
+      } else {
+        statPremiosDetalle.textContent = progreso.rewards.length ? 'Comparte tus logros con tu comunidad' : 'Ningún premio todavía';
+      }
+    };
+
+    const cargarPerfil = async () => {
+      perfilSaludo.textContent = `Hola, ${userName}`;
+
+      if (!userEmail) {
+        perfilDescripcion.textContent = 'Inicia sesión para conectar tu progreso y ver tus estadísticas personalizadas.';
+        perfilDatos.innerHTML = '<span class="mensaje-vacio">No tenemos un correo asociado. Ve a la sección de registro e inicia sesión para activar tu perfil.</span>';
+        renderRetos([]);
+        renderPremios([]);
+        renderCalculadora([]);
+        renderLogros([]);
+        return;
+      }
+
+      perfilDescripcion.textContent = 'Tu impacto sostenible se registra y te acompaña, sin importar desde dónde ingreses.';
+      perfilDatos.innerHTML = `<span>${userEmail}</span>`;
+
+      try {
+        const [progresoResp, calculadoraResp] = await Promise.all([
+          fetch(`${API_URL}/progress?email=${encodeURIComponent(userEmail)}`),
+          fetch(`${API_URL}/footprint/history?email=${encodeURIComponent(userEmail)}&limit=10`)
+        ]);
+
+        const progresoData = await progresoResp.json();
+        if (!progresoResp.ok) {
+          throw new Error(progresoData.error || 'No se pudo consultar tu progreso.');
+        }
+
+        let historialCalculadora = [];
+        if (calculadoraResp.ok) {
+          const calculadoraData = await calculadoraResp.json();
+          historialCalculadora = calculadoraData.history || [];
+        } else {
+          if (calculadoraResp.status !== 404) {
+            const errData = await calculadoraResp.json().catch(() => ({}));
+            console.warn('No se pudo obtener historial de calculadora:', errData.error || calculadoraResp.statusText);
+          }
+          historialCalculadora = cargarHistorialLocalCalculadora(userEmail);
+        }
+
+        if (!historialCalculadora.length) {
+          historialCalculadora = cargarHistorialLocalCalculadora(userEmail);
+        }
+
+        const progreso = progresoData.progress || { points: 0, challenges: [], rewards: [] };
+        actualizarResumen(progreso);
+        renderRetos(progreso.challenges);
+        renderPremios(progreso.rewards);
+        renderCalculadora(historialCalculadora);
+        const logros = buildLogros(progreso, historialCalculadora);
+        renderLogros(logros);
+      } catch (error) {
+        console.error(error);
+        mostrarToast(error.message);
+        renderRetos([]);
+        renderPremios([]);
+        const fallbackHistory = cargarHistorialLocalCalculadora(userEmail);
+        renderCalculadora(fallbackHistory);
+        const fallbackLogros = buildLogros({ challenges: [], rewards: [] }, fallbackHistory);
+        renderLogros(fallbackLogros);
+      }
+    };
+
+    btnCerrarSesion.addEventListener('click', () => {
+      sessionStorage.removeItem('ecoUserName');
+      sessionStorage.removeItem('ecoUserEmail');
+      mostrarToast('Sesión cerrada.');
+      setTimeout(() => {
+        window.location.href = 'registro.html';
+      }, 600);
+    });
+
+    cargarPerfil();
+  </script>
+</body>
+</html>
