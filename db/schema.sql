@@ -29,3 +29,20 @@ CREATE TABLE IF NOT EXISTS user_rewards (
   cost INTEGER NOT NULL,
   redeemed_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS user_calculations (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  score INTEGER NOT NULL,
+  badge TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  meta_percent INTEGER NOT NULL,
+  inputs JSONB NOT NULL,
+  breakdown JSONB NOT NULL,
+  focus_areas JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_calculations_user_id_created_at
+  ON user_calculations (user_id, created_at DESC);
