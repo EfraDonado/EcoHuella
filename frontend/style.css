@@ -553,89 +553,6 @@ footer.calc-footer {
   font-family: inherit;
 }
 
-.visually-hidden {
-/* Clase para esconder elementos sin comprometer la accesibilidad */
-.visually-hidden {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Botonera animada que representa los tipos de vivienda */
-.vivienda-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.vivienda-btn {
-  position: relative;
-  border: none;
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 600;
-  background: rgba(39,174,96,0.08);
-  color: var(--eco-green-dark);
-  cursor: pointer;
-  transition: transform 0.32s cubic-bezier(.4,0,.2,1), box-shadow 0.32s cubic-bezier(.4,0,.2,1), background 0.32s ease;
-  overflow: hidden;
-}
-
-.vivienda-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, rgba(39,174,96,0.18), rgba(46,204,113,0.1));
-  opacity: 0;
-  transition: opacity 0.32s ease;
-  z-index: -1;
-}
-
-.vivienda-btn:hover,
-.vivienda-btn:focus {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 22px rgba(39,174,96,0.12);
-  background: rgba(39,174,96,0.12);
-}
-
-.vivienda-btn:focus-visible {
-  outline: 2px solid rgba(39,174,96,0.4);
-  outline-offset: 2px;
-}
-
-.vivienda-btn:hover::after,
-.vivienda-btn:focus::after {
-  opacity: 0.5;
-}
-
-.vivienda-btn.is-active {
-  color: #fff;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-  box-shadow: 0 12px 26px rgba(39,174,96,0.28);
-}
-
-.vivienda-btn.is-active::after {
-  opacity: 1;
-}
-
-.vivienda-btn--pulse {
-  animation: viviendaPulse 0.5s ease;
-}
-
-@keyframes viviendaPulse {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.08); }
-  65% { transform: scale(0.97); }
-  100% { transform: scale(1); }
-}
-
 .panel-footer {
   display: flex;
   flex-wrap: wrap;
@@ -951,4 +868,3 @@ footer.calc-footer {
     border-radius: 22px;
   }
 }
-} 

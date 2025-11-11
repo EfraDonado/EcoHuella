@@ -66,7 +66,6 @@ function initCalculator(root) {
 			vivienda: document.getElementById('selVivienda'),
 			energia: document.getElementById('selEnergia')
 		},
-		viviendaButtons: Array.from(root.querySelectorAll('.vivienda-btn')),
 		buttons: {
 			calcular: document.getElementById('btnCalcular'),
 			reiniciar: document.getElementById('btnReiniciar'),
@@ -97,34 +96,6 @@ function initCalculator(root) {
 	};
 
 	setupActionsMenu(root);
-
-	// Botonera de tipo de vivienda sincronizada con el select oculto
-	const viviendaButtons = elements.viviendaButtons;
-	const syncViviendaButtons = value => {
-		if (!viviendaButtons?.length) return;
-		viviendaButtons.forEach(btn => {
-			const isActive = btn.dataset.vivienda === value;
-			btn.classList.toggle('is-active', isActive);
-			btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-		});
-	};
-
-	if (viviendaButtons?.length) {
-		viviendaButtons.forEach(btn => {
-			btn.addEventListener('click', () => {
-				if (!elements.selects.vivienda) return;
-				elements.selects.vivienda.value = btn.dataset.vivienda;
-				elements.selects.vivienda.dispatchEvent(new Event('change', { bubbles: true }));
-				btn.classList.add('vivienda-btn--pulse');
-			});
-			btn.addEventListener('animationend', () => btn.classList.remove('vivienda-btn--pulse'));
-		});
-		syncViviendaButtons(elements.selects.vivienda?.value || 'departamento');
-	}
-
-	elements.selects.vivienda?.addEventListener('change', event => {
-		syncViviendaButtons(event.target.value);
-	});
 
 	const categories = [
 		{ id: 'energia', label: 'Energía', input: document.getElementById('inpEnergia'), weight: 0.24 },
@@ -203,7 +174,6 @@ function initCalculator(root) {
 				cat.input.dispatchEvent(new Event('input'));
 			}
 		});
-		syncViviendaButtons(elements.selects.vivienda?.value || 'departamento');
 		resetSummary();
 		resetProjection();
 		state.lastScore = null;
