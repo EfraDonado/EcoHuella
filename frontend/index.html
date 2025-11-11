@@ -10,6 +10,7 @@
     href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh3-GRwZEIaHdXIim4l_VB742qC6V4MPQx5ygca2rmmzJRA1lOcTp-Hry4Qb3FZqTTButXgcyvlC-f7g_zDJnxetKmAki3Qy0YtshKtyl_QvR9PCnZPV3VlmWJPw0Sbxp7bzGQO6SseaEw4EWsVonNv80leEB7rhygmcoEyO73_4eCaioCHyyfZShaNeA4/s1772/2023_06_05_dia-del-medio-ambiente.jpg"
     rel="stylesheet" />
   <style>
+    /* Configuración base de la página de inicio para que todo se vea limpio y sin barras laterales extrañas */
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
@@ -18,6 +19,7 @@
       overflow-x: hidden;
     }
 
+    /* Barra superior que queda fija y sirve como brújula para moverse por la página */
     header {
       background: white;
       display: flex;
@@ -43,6 +45,7 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
+    /* Enlaces del menú y botón desplegable con un efecto suave cuando el cursor pasa por encima */
     header nav a,
     .dropdown .dropbtn {
       margin: 0 15px;
@@ -68,6 +71,7 @@
       box-shadow: 0 4px 12px rgba(39,174,96,0.13);
     }
 
+    /* Botón principal de acceso/registro ubicado arriba a la derecha */
     .btn-login {
       background: #219150;
       color: white;
@@ -80,10 +84,13 @@
     }
 
     .btn-login:hover {
-      background: #219150;
+      background: #fff;
+      color: #219150;
       transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(33, 145, 80, 0.22);
     }
 
+    /* Héroe principal que da la bienvenida con imagen de fondo a pantalla completa */
     .hero {
       background: url("imagenes/mirada.png") center center / cover no-repeat;
       height: 100vh;
@@ -126,6 +133,21 @@
       animation: fadeInUp 1.5s ease;
     }
 
+    /* Contenedor del llamado a la acción para asegurar que los botones queden centrados sí o sí */
+    #hero-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 12px;
+    }
+
+    #hero-action > * {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .hero button {
       margin-top: 30px;
       background: #219150;
@@ -146,6 +168,7 @@
       box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
     }
 
+    /* Secciones internas con un grid sencillo que se activa en escritorio */
     section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -176,6 +199,7 @@
       text-align: left;
     }
 
+    /* Modal que resalta la información del ODS 13 cuando se activa */
     #odsModal {
       display: none;
       position: fixed;
@@ -229,6 +253,7 @@
       }
     }
 
+    /* Acordeón de preguntas frecuentes con cards suaves */
     .faq-list {
       margin-top: 30px;
     }
@@ -342,9 +367,10 @@
       text-decoration: none;
     }
     .perfil-dropdown .dropbtn:hover, .perfil-dropdown .dropbtn:focus {
-      background: #27ae60;
-      transform: scale(1.05);
-      box-shadow: 0 6px 18px rgba(39,174,96,0.18);
+      background: #ffffff;
+      color: #219150;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(39,174,96,0.18);
     }
     .perfil-dropdown-content {
       left: auto;
@@ -524,6 +550,7 @@
 
   <!-- Lógica que maneja personalización, animaciones y menús -->
   <script>
+    // Personalizamos el hero y la navegación según los datos guardados en la sesión
     const heroAction = document.getElementById("hero-action");
     const btnLogin = document.getElementById("btnLogin");
     const storedName = sessionStorage.getItem('ecoUserName');

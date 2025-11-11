@@ -6,17 +6,17 @@
   <title>Calculadora de Huella Ecológica</title>
   <link rel="stylesheet" href="../style.css" />
   <script defer src="../script.js"></script>
-  <!-- apartado: el script principal está en ../script.js -->
+  <!-- Conectamos con el script compartido para que toda la lógica cobre vida -->
 </head>
 <body class="calc-body">
-  <!-- apartado: fondo animado y capa de luz -->
+  <!-- Capas decorativas que envuelven la calculadora con destellos suaves -->
   <div class="calc-bg" aria-hidden="true"></div>
   <div class="calc-glow" aria-hidden="true"></div>
 
-  <!-- apartado: contenedor raíz de la calculadora -->
+  <!-- Contenedor raíz donde vive toda la experiencia de la calculadora -->
   <main class="calc-root" data-page="calculator">
 
-    <!-- apartado: acciones rápidas en un menú desplegable superior -->
+  <!-- Menú de atajos para saltar a otras secciones sin perder la vista actual -->
     <div class="calc-actions" data-actions>
       <button type="button" id="calcActionsToggle" class="btn-outline-alt calc-actions__toggle" aria-haspopup="true" aria-expanded="false" aria-controls="calcActionsMenu">
         Acciones rápidas
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <!-- apartado: cabecera con mensaje principal y KPI rápidos -->
+  <!-- Cabecera motivacional con indicadores que se actualizan al instante -->
     <section class="calc-hero">
       <div class="calc-hero__info">
         <h1 class="calc-hero__title">Calcula tu Huella Ecológica</h1>
@@ -61,7 +61,7 @@
       </aside>
     </section>
 
-    <!-- apartado: sección principal con formulario y resultados -->
+  <!-- Zona de trabajo donde se mezclan formulario, resultados y recomendaciones -->
     <section class="calc-workspace">
       <form id="calcForm" class="calc-panel calc-panel--form" aria-label="Formulario para calcular la huella ecológica">
         <header class="panel-header">
@@ -69,7 +69,7 @@
           <p>Desliza y ajusta las categorías clave, luego afina con tus hábitos reales para obtener una estimación personalizada.</p>
         </header>
 
-        <!-- apartado: controles tipo slider -->
+  <!-- Controles tipo slider para calibrar rápidamente tus hábitos principales -->
         <div class="slider-grid">
           <label class="slider-field">Energía en el hogar
             <input id="inpEnergia" type="range" min="0" max="10" value="4" step="1" />
@@ -93,7 +93,7 @@
           </label>
         </div>
 
-        <!-- apartado: ajustes finos y hábitos específicos -->
+  <!-- Ajustes finos para detallar hábitos y estilo de vida -->
         <div class="habit-grid">
           <div class="habit-toggle">
             <input type="checkbox" id="chkRenovable" />
@@ -109,8 +109,15 @@
           </div>
           <div class="habit-select">
             <label for="selVivienda">Tipo de vivienda</label>
-            <select id="selVivienda">
-              <option value="departamento">Departamento</option>
+            <!-- Botonera animada que representa cada tipo de vivienda -->
+            <div class="vivienda-buttons" role="group" aria-label="Tipo de vivienda">
+              <button type="button" class="vivienda-btn is-active" data-vivienda="departamento">Departamento</button>
+              <button type="button" class="vivienda-btn" data-vivienda="casa">Casa</button>
+              <button type="button" class="vivienda-btn" data-vivienda="compartida">Compartida</button>
+              <button type="button" class="vivienda-btn" data-vivienda="rural">Rural</button>
+            </div>
+            <select id="selVivienda" class="visually-hidden" aria-hidden="true" tabindex="-1">
+              <option value="departamento" selected>Departamento</option>
               <option value="casa">Casa</option>
               <option value="compartida">Compartida</option>
               <option value="rural">Rural</option>
@@ -139,7 +146,7 @@
         </footer>
       </form>
 
-      <!-- apartado: panel de resultados con visualizaciones -->
+  <!-- Panel de resultados donde se resume tu impacto y se cuentan historias -->
       <section class="calc-panel calc-panel--results" aria-live="polite">
         <header class="panel-header">
           <h2>Resultados y oportunidades</h2>
@@ -161,10 +168,10 @@
           </div>
         </div>
 
-        <!-- apartado: barras comparativas por categoría -->
+  <!-- Barras comparativas por categoría para ver qué pesa más -->
         <div class="breakdown" id="breakdown"></div>
 
-        <!-- apartado: proyección y metas -->
+  <!-- Proyección de metas para imaginar cómo baja el puntaje si mejoras -->
         <div class="projection">
           <header>
             <h3>Escenario proyectado</h3>
@@ -190,7 +197,7 @@
           </div>
         </div>
 
-        <!-- apartado: acciones recomendadas -->
+  <!-- Lista de acciones recomendadas para transformar los datos en pasos concretos -->
         <section class="action-plan">
           <header>
             <h3>Plan inteligente</h3>
@@ -199,7 +206,7 @@
           <ul id="planList" class="action-plan__list"></ul>
         </section>
 
-        <!-- apartado: log de sesiones y streak -->
+  <!-- Historial y racha para motivarte a volver y medir seguido -->
         <section class="history">
           <header>
             <h3>Historial inteligente</h3>

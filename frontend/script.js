@@ -1,4 +1,4 @@
-// apartado: script principal compartido por las páginas del frontend
+// Script central del frontend: aquí orquestamos todo lo que comparten las páginas
 console.log('EcoHuella listo para usar la API y las utilidades del frontend.');
 
 const API_URL = window.__ECO_API_URL || (() => {
@@ -12,7 +12,7 @@ if (!window.__ECO_API_URL) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	// apartado: vincular ripple y utilidades globales
+	// Arrancamos efectos globales y checamos si estamos en la calculadora
 	initRipple();
 
 	const calcRoot = document.querySelector('.calc-root[data-page="calculator"]');
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
-// apartado: animación ripple reutilizable para botones destacados
+// Efecto ripple reutilizable para darle vida a los botones protagonistas
 function initRipple() {
 	const rippleTargets = document.querySelectorAll('.btn-main, .btn-outline, .btn-outline-alt, .btn-login');
 	rippleTargets.forEach(btn => {
@@ -42,7 +42,7 @@ function initRipple() {
 	});
 }
 
-// apartado: inicializa la nueva calculadora profesional
+// Punto de entrada de la calculadora avanzada; desde aquí se controla todo el flujo
 function initCalculator(root) {
 	const userEmail = sessionStorage.getItem('ecoUserEmail') || null;
 	const LS_HISTORY_KEY = userEmail ? `eco_calculator_history_${userEmail}` : 'eco_calculator_history_v2';
@@ -66,6 +66,7 @@ function initCalculator(root) {
 			vivienda: document.getElementById('selVivienda'),
 			energia: document.getElementById('selEnergia')
 		},
+		viviendaButtons: Array.from(root.querySelectorAll('.vivienda-btn')),
 		buttons: {
 			calcular: document.getElementById('btnCalcular'),
 			reiniciar: document.getElementById('btnReiniciar'),
@@ -97,6 +98,34 @@ function initCalculator(root) {
 
 	setupActionsMenu(root);
 
+	// Botonera de tipo de vivienda sincronizada con el select oculto
+	const viviendaButtons = elements.viviendaButtons;
+	const syncViviendaButtons = value => {
+		if (!viviendaButtons?.length) return;
+		viviendaButtons.forEach(btn => {
+			const isActive = btn.dataset.vivienda === value;
+			btn.classList.toggle('is-active', isActive);
+			btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+		});
+	};
+
+	if (viviendaButtons?.length) {
+		viviendaButtons.forEach(btn => {
+			btn.addEventListener('click', () => {
+				if (!elements.selects.vivienda) return;
+				elements.selects.vivienda.value = btn.dataset.vivienda;
+				elements.selects.vivienda.dispatchEvent(new Event('change', { bubbles: true }));
+				btn.classList.add('vivienda-btn--pulse');
+			});
+			btn.addEventListener('animationend', () => btn.classList.remove('vivienda-btn--pulse'));
+		});
+		syncViviendaButtons(elements.selects.vivienda?.value || 'departamento');
+	}
+
+	elements.selects.vivienda?.addEventListener('change', event => {
+		syncViviendaButtons(event.target.value);
+	});
+
 	const categories = [
 		{ id: 'energia', label: 'Energía', input: document.getElementById('inpEnergia'), weight: 0.24 },
 		{ id: 'transporte', label: 'Transporte', input: document.getElementById('inpTransporte'), weight: 0.22 },
@@ -107,7 +136,7 @@ function initCalculator(root) {
 
 	const confetti = buildConfetti(elements.confettiCanvas);
 
-	// apartado: listeners de sliders para mostrar valores y degradados
+	// Configuramos los sliders para que muestren valores y gradientes en vivo
 	categories.forEach(cat => {
 		if (!cat.input) return;
 		const label = root.querySelector(`.slider-value[data-for="${cat.input.id}"]`);
@@ -174,6 +203,7 @@ function initCalculator(root) {
 				cat.input.dispatchEvent(new Event('input'));
 			}
 		});
+		syncViviendaButtons(elements.selects.vivienda?.value || 'departamento');
 		resetSummary();
 		resetProjection();
 		state.lastScore = null;
@@ -210,6 +240,7 @@ function initCalculator(root) {
 		link.remove();
 	});
 
+	// Carga el historial desde localStorage y, si existe, lo pinta de inmediato
 	function bootstrapHistory() {
 		const cached = normalizeHistory(loadLocalHistory());
 		if (cached.length) {
@@ -227,6 +258,7 @@ function initCalculator(root) {
 			.catch(err => console.warn('No se pudo obtener el historial remoto.', err));
 	}
 
+	// Guarda el historial normalizado y actualiza todos los módulos dependientes
 	function commitHistory(list, { hydrateFromLatest = false } = {}) {
 		const normalized = normalizeHistory(list);
 		state.history = normalized;
@@ -259,6 +291,7 @@ function initCalculator(root) {
 		saveLocalHistory(normalized);
 	}
 
+	// Vuelve a dejar el resumen en su estado inicial
 	function resetSummary() {
 		elements.scoreValue.textContent = '—';
 		elements.scoreRing?.setAttribute('stroke-dasharray', '0 360');
@@ -271,6 +304,7 @@ function initCalculator(root) {
 		elements.planList.innerHTML = '';
 	}
 
+	// Limpia los indicadores de proyección cuando no hay datos recientes
 	function resetProjection() {
 		if (!elements.projections) return;
 		elements.projections.actual.textContent = '—';
@@ -278,6 +312,7 @@ function initCalculator(root) {
 		elements.projections.impacto.textContent = '—';
 	}
 
+	// Lee el historial guardado en localStorage, manejando errores silenciosos
 	function loadLocalHistory() {
 		try {
 			return JSON.parse(localStorage.getItem(LS_HISTORY_KEY) || '[]');
@@ -287,6 +322,7 @@ function initCalculator(root) {
 		}
 	}
 
+	// Persiste el historial en localStorage para usarlo sin conexión
 	function saveLocalHistory(list) {
 		try {
 			localStorage.setItem(LS_HISTORY_KEY, JSON.stringify(list));
@@ -295,6 +331,7 @@ function initCalculator(root) {
 		}
 	}
 
+	// Normaliza la estructura del historial sin importar de dónde venga
 	function normalizeHistory(list) {
 		return (Array.isArray(list) ? list : []).map(entry => {
 			const rawInputs = entry.inputs && typeof entry.inputs === 'object' ? entry.inputs : {};
@@ -317,6 +354,7 @@ function initCalculator(root) {
 		});
 	}
 
+	// Consulta el backend para traer los últimos cálculos guardados
 	async function fetchRemoteHistory(limit = 6) {
 		if (!state.userEmail) return [];
 		const params = new URLSearchParams({ email: state.userEmail, limit: String(limit) });
@@ -328,6 +366,7 @@ function initCalculator(root) {
 		return normalizeHistory(data.history || []);
 	}
 
+	// Envía al backend el cálculo más reciente para sincronizar la cuenta
 	async function persistCalculationRemote(result) {
 		if (!state.userEmail) return null;
 		const payload = {
@@ -353,7 +392,7 @@ function initCalculator(root) {
 		return data;
 	}
 }
-// apartado: menú superior para acceder a acciones rápidas
+// Control del menú superior desplegable con las acciones rápidas
 function setupActionsMenu(scope) {
 	const wrapper = scope.querySelector('.calc-actions');
 	if (!wrapper) return;
@@ -403,7 +442,7 @@ function setupActionsMenu(scope) {
 	menu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 }
 
-// apartado: calcula puntajes, niveles y oportunidades
+// Calcula el puntaje total, define el nivel y arma oportunidades de mejora
 function calculateFootprint(categories, elements) {
 	const weights = { energia: 0.24, transporte: 0.22, alimentacion: 0.18, residuos: 0.18, consumo: 0.18 };
 	const inputs = {};
@@ -463,14 +502,14 @@ function calculateFootprint(categories, elements) {
 	};
 }
 
-// apartado: clasifica puntaje en nivel y color
+// Traduce el puntaje numérico a un nivel con su color correspondiente
 function classifyScore(score) {
 	if (score <= 33) return { label: 'Nivel verde', color: '#27ae60' };
 	if (score <= 66) return { label: 'Nivel intermedio', color: '#f39c12' };
 	return { label: 'Nivel crítico', color: '#e74c3c' };
 }
 
-// apartado: narrativa según nivel
+// Redacta un mensaje motivador según el nivel actual
 function buildNarrative(score, badge) {
 	if (badge.label === 'Nivel verde') {
 		return {
@@ -490,7 +529,7 @@ function buildNarrative(score, badge) {
 	};
 }
 
-// apartado: genera plan según categorías destacadas
+// Genera un plan de acción tomando las categorías más altas
 function buildFocusAreas(breakdown) {
 	const library = {
 		energia: [
@@ -522,7 +561,7 @@ function buildFocusAreas(breakdown) {
 	});
 }
 
-// apartado: renderiza resumen principal y animaciones
+// Pinta el resumen principal y lanza las animaciones clave
 function renderResult(elements, result) {
 	animateNumber(elements.scoreValue, result.score);
 	animateRing(elements.scoreRing, result.score);
@@ -533,7 +572,7 @@ function renderResult(elements, result) {
 	elements.scoreBadge.style.color = result.color;
 }
 
-// apartado: renderiza barras de desglose
+// Dibuja el desglose por categoría con barras animadas
 function renderBreakdown(container, breakdown) {
 	container.innerHTML = '';
 	breakdown.forEach(item => {
@@ -556,7 +595,7 @@ function renderBreakdown(container, breakdown) {
 	});
 }
 
-// apartado: renderiza plan de acción
+// Construye la lista con el plan recomendado
 function renderPlan(list, focusAreas) {
 	list.innerHTML = '';
 	focusAreas.forEach(item => {
@@ -567,7 +606,7 @@ function renderPlan(list, focusAreas) {
 	});
 }
 
-// apartado: renderiza historial de sesiones
+// Actualiza el historial de cálculos mostrados en tarjetas
 function renderHistory(container, history) {
 	if (!container) return;
 	container.innerHTML = '';
@@ -587,7 +626,7 @@ function renderHistory(container, history) {
 	});
 }
 
-// apartado: actualiza proyección de metas
+// Calcula cómo quedaría el puntaje si cumples la meta seleccionada
 function updateProjection(elements, score) {
 	const meta = parseInt(elements.metaSlider?.value || '20', 10);
 	const objetivo = projectScore(score, meta);
@@ -597,13 +636,13 @@ function updateProjection(elements, score) {
 	elements.projections.impacto.textContent = `-${impacto} pts`;
 }
 
-// apartado: proyección de puntaje con meta
+// Helper para proyectar el puntaje con base en el porcentaje de meta
 function projectScore(score, metaPercent) {
 	const factor = 1 - (metaPercent / 100);
 	return clamp(Math.round(score * factor), 0, 100);
 }
 
-// apartado: actualiza KPIs superiores
+// Refresca los KPIs superiores con el último cálculo
 function updateKPIs(kpis, history, latest) {
 	if (!kpis) return;
 	if (kpis.streak) kpis.streak.textContent = history.length;
@@ -619,7 +658,7 @@ function updateKPIs(kpis, history, latest) {
 	}
 }
 
-// apartado: animación numérica suave
+// Animación numérica para que el puntaje suba o baje sin saltos bruscos
 function animateNumber(el, target) {
 	if (!el) return;
 	const start = parseInt(el.textContent.replace(/\D/g, '') || '0', 10);
@@ -635,7 +674,7 @@ function animateNumber(el, target) {
 	requestAnimationFrame(frame);
 }
 
-// apartado: animación del anillo de puntaje
+// Anima el anillo circular del puntaje principal
 function animateRing(circle, score) {
 	if (!circle) return;
 	const circumference = 2 * Math.PI * 52;
@@ -644,7 +683,7 @@ function animateRing(circle, score) {
 	circle.setAttribute('stroke-dasharray', `${circumference - offset} ${offset}`);
 }
 
-// apartado: motor de confetti reutilizado
+// Motor de confetti que celebrará los logros cuando corresponda
 function buildConfetti(canvas) {
 	if (!canvas) return () => {};
 	const ctx = canvas.getContext('2d');
@@ -698,7 +737,7 @@ function buildConfetti(canvas) {
 	};
 }
 
-// apartado: helpers generales
+// Colección de utilidades pequeñitas que usa toda la calculadora
 function clamp(value, min, max) {
 	if (Number.isNaN(value)) return min;
 	return Math.max(min, Math.min(max, value));

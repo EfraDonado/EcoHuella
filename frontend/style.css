@@ -1,3 +1,4 @@
+/* Variables globales que dan la paleta y el carácter visual del sitio */
 :root {
   --eco-green: #27ae60;
   --eco-green-dark: #1b7c46;
@@ -33,7 +34,7 @@ a:hover {
   color: var(--eco-green);
 }
 
-/* apartado: cabecera principal reutilizable */
+/* Barra de navegación que podemos reutilizar en cualquier pantalla */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -84,7 +85,7 @@ a:hover {
   font-size: 1.4rem;
 }
 
-/* apartado: botones y microinteracciones globales */
+/* Estilos base para los botones que aparecen por todo el sitio */
 .btn-main,
 .btn-login,
 .btn-outline,
@@ -117,6 +118,13 @@ a:hover {
   padding: 10px 24px;
   border-color: var(--eco-emerald);
   box-shadow: 0 8px 18px rgba(46,204,113,0.22);
+}
+
+.btn-login:hover,
+.btn-login:focus {
+  background: #fff;
+  color: var(--eco-emerald);
+  box-shadow: 0 10px 24px rgba(46,204,113,0.22);
 }
 
 .btn-outline {
@@ -166,7 +174,7 @@ a:hover {
   }
 }
 
-/* apartado: secciones generales reutilizables */
+/* Secciones genéricas que repetimos en varias vistas */
 section {
   padding: 60px 15%;
 }
@@ -194,7 +202,7 @@ footer.calc-footer {
   padding-top: 6px;
 }
 
-/* apartado: hero principal (landing) */
+/* Hero principal de la landing con la imagen gigante de fondo */
 .hero {
   position: relative;
   width: 100%;
@@ -235,7 +243,7 @@ footer.calc-footer {
   margin: 12px auto 0;
 }
 
-/* apartado: estilos específicos para la nueva calculadora */
+/* A partir de aquí vive toda la estética de la calculadora */
 .calc-body {
   background: #f6fff9;
   min-height: 100vh;
@@ -545,6 +553,89 @@ footer.calc-footer {
   font-family: inherit;
 }
 
+.visually-hidden {
+/* Clase para esconder elementos sin comprometer la accesibilidad */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Botonera animada que representa los tipos de vivienda */
+.vivienda-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.vivienda-btn {
+  position: relative;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 600;
+  background: rgba(39,174,96,0.08);
+  color: var(--eco-green-dark);
+  cursor: pointer;
+  transition: transform 0.32s cubic-bezier(.4,0,.2,1), box-shadow 0.32s cubic-bezier(.4,0,.2,1), background 0.32s ease;
+  overflow: hidden;
+}
+
+.vivienda-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(39,174,96,0.18), rgba(46,204,113,0.1));
+  opacity: 0;
+  transition: opacity 0.32s ease;
+  z-index: -1;
+}
+
+.vivienda-btn:hover,
+.vivienda-btn:focus {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(39,174,96,0.12);
+  background: rgba(39,174,96,0.12);
+}
+
+.vivienda-btn:focus-visible {
+  outline: 2px solid rgba(39,174,96,0.4);
+  outline-offset: 2px;
+}
+
+.vivienda-btn:hover::after,
+.vivienda-btn:focus::after {
+  opacity: 0.5;
+}
+
+.vivienda-btn.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  box-shadow: 0 12px 26px rgba(39,174,96,0.28);
+}
+
+.vivienda-btn.is-active::after {
+  opacity: 1;
+}
+
+.vivienda-btn--pulse {
+  animation: viviendaPulse 0.5s ease;
+}
+
+@keyframes viviendaPulse {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.08); }
+  65% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
 .panel-footer {
   display: flex;
   flex-wrap: wrap;
@@ -778,7 +869,7 @@ footer.calc-footer {
   justify-content: center;
 }
 
-/* apartado: canvas para confetti */
+/* Capa del confetti que hace fiesta sobre toda la pantalla */
 .confetti-layer {
   position: fixed;
   inset: 0;
@@ -786,7 +877,7 @@ footer.calc-footer {
   z-index: 5;
 }
 
-/* apartado: animaciones utilitarias */
+/* Animaciones cortas que usamos como condimento visual */
 .fade-in {
   animation: fadeIn 0.7s ease both;
 }
@@ -796,7 +887,7 @@ footer.calc-footer {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* apartado: responsive */
+/* Ajustes responsivos para que nada se rompa en pantallas chicas */
 @media (max-width: 960px) {
   .calc-root {
     padding: 48px 5vw 70px;
@@ -860,3 +951,4 @@ footer.calc-footer {
     border-radius: 22px;
   }
 }
+} 

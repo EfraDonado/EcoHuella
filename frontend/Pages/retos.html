@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Retos EcoHuella | Vive la experiencia</title>
   <style>
+    /* Estilos principales de la vista de retos, inspirados en la identidad EcoHuella */
     :root {
       --green-primary: #1f8a5b;
       --green-secondary: #35c47c;
@@ -20,7 +21,8 @@
       color: var(--text-dark);
     }
 
-    header {
+  /* Cabecera con resumen de puntos y accesos rápidos */
+  header {
       max-width: 1100px;
       margin: 40px auto 20px;
       padding: 32px;
@@ -78,7 +80,8 @@
       box-shadow: 0 16px 30px rgba(31, 138, 91, 0.22);
     }
 
-    .status-card {
+  /* Tarjetas compactas para mostrar indicadores clave */
+  .status-card {
       flex: 1 1 220px;
       background: var(--green-soft);
       border-radius: 18px;
@@ -111,7 +114,8 @@
       color: var(--green-primary);
     }
 
-    main {
+  /* Layout de dos columnas: retos y premios */
+  main {
       max-width: 1100px;
       margin: 0 auto 60px;
       display: grid;
@@ -120,7 +124,8 @@
       padding: 0 12px 40px;
     }
 
-    .panel {
+  /* Paneles reutilizables con sombra suave */
+  .panel {
       background: rgba(255, 255, 255, 0.96);
       border-radius: 28px;
       box-shadow: 0 18px 45px rgba(27, 121, 80, 0.12);
@@ -139,12 +144,14 @@
       gap: 10px;
     }
 
-    .retos-grid {
+  /* Grid que agrupa las tarjetas de retos */
+  .retos-grid {
       display: grid;
       gap: 18px;
     }
 
-    .reto-card {
+  /* Tarjetas individuales de cada reto */
+  .reto-card {
       border-radius: 22px;
       padding: 22px;
       background: linear-gradient(125deg, rgba(31,138,91,0.06), rgba(53,196,124,0.08));
@@ -208,7 +215,8 @@
       box-shadow: none;
     }
 
-    .recompensas-lista {
+  /* Columna de recompensas disponibles */
+  .recompensas-lista {
       display: grid;
       gap: 16px;
     }
@@ -304,6 +312,7 @@
   </style>
 </head>
 <body>
+  <!-- Cabecera principal con el resumen de puntos y accesos rápidos -->
   <header>
     <h1>Retos que abrazan al planeta</h1>
     <p>Escoge las acciones que más te inspiren, suma eco puntos y canjéalos por pequeñas recompensas que celebran tu esfuerzo diario. Cada clic que das aquí se siente en el mundo real.</p>
@@ -328,6 +337,7 @@
     </div>
   </header>
 
+  <!-- Contenido principal: retos del lado izquierdo y premios a la derecha -->
   <main>
     <section class="panel" id="panelRetos">
       <h2>Retos disponibles</h2>
@@ -348,9 +358,11 @@
     </aside>
   </main>
 
+  <!-- Mensaje flotante reutilizado para avisos y celebraciones -->
   <div class="mensaje" id="toast"></div>
 
   <script>
+  // Módulo de retos y premios: controla progreso, canjes y mensajes
   const API_URL = window.__ECO_API_URL || (() => {
     const { hostname } = window.location;
     const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
@@ -361,7 +373,8 @@
     window.__ECO_API_URL = API_URL;
   }
 
-    const RETOS = [
+  // Catálogo base de retos que rotamos según el progreso
+  const RETOS = [
       { id: 'reto-energia', titulo: 'Dale un respiro a la energía', descripcion: 'Desconecta cargadores y electrodomésticos que no estás usando. Regálale un descanso a la red eléctrica.', puntos: 30, etiqueta: '10 min' },
       { id: 'reto-movilidad', titulo: 'Ruta verde', descripcion: 'Elige caminar, pedalear o usar transporte público en al menos un trayecto del día.', puntos: 40, etiqueta: 'Transporte' },
       { id: 'reto-agua', titulo: 'Agua que no esperas', descripcion: 'Recolecta el agua fría de la ducha mientras llega la caliente para reutilizarla en plantas.', puntos: 25, etiqueta: 'Casa' },
@@ -376,13 +389,15 @@
       { id: 'reto-comunidad', titulo: 'Invita a otro guardián', descripcion: 'Invita a una persona a unirse a EcoHuella y acompáñala en su primer reto.', puntos: 45, etiqueta: 'Comunidad' }
     ];
 
-    const PREMIOS = [
+  // Catálogo de premios disponibles para canjear con eco puntos
+  const PREMIOS = [
       { id: 'premio-insignia', nombre: 'Insignia "Guardían EcoHuella"', costo: 80, descripcion: 'Un pin digital brillante que reconoce tu compromiso.' },
       { id: 'premio-reto', nombre: 'Acceso a reto exclusivo', costo: 120, descripcion: 'Desbloquea una misión secreta con desafíos colaborativos.' },
       { id: 'premio-kit', nombre: 'Mini kit de ideas verdes', costo: 150, descripcion: 'Recibe una guía descargable con ideas nuevas cada semana.' }
     ];
 
-    const RETO_BATCH_SIZE = 3;
+  // Mostramos solo tres retos a la vez para no abrumar
+  const RETO_BATCH_SIZE = 3;
 
     const userEmail = sessionStorage.getItem('ecoUserEmail');
 
@@ -399,7 +414,8 @@
     const registroPremios = document.getElementById('registroPremios');
     const toast = document.getElementById('toast');
 
-    const mezclar = (lista) => {
+  // Mezclamos la lista para que los retos roten cada vez
+  const mezclar = (lista) => {
       const copia = [...lista];
       for (let i = copia.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -408,19 +424,22 @@
       return copia;
     };
 
-    const obtenerRetosDisponibles = () => {
+  // Devuelve solo los retos que no se han completado aún
+  const obtenerRetosDisponibles = () => {
       const completados = new Set(retosRegistrados.map((reto) => reto.code));
       return mezclar(RETOS.filter((reto) => !completados.has(reto.id)));
     };
 
-    const sincronizarEstado = (progress) => {
+  // Sincroniza la información local con la respuesta de la API
+  const sincronizarEstado = (progress) => {
       puntos = progress.points || 0;
       retosRegistrados = progress.challenges || [];
       premiosRegistrados = progress.rewards || [];
       retosCompletados = new Set(retosRegistrados.map((reto) => reto.code));
     };
 
-    const actualizarResumen = () => {
+  // Refresca los KPIs del encabezado y el registro de premios
+  const actualizarResumen = () => {
       totalPuntosEl.textContent = puntos;
       retosCompletadosEl.textContent = retosRegistrados.length;
       premiosCanjeadosEl.textContent = premiosRegistrados.length;
@@ -439,13 +458,15 @@
       registroPremios.innerHTML = '<strong>Últimos premios canjeados</strong>' + ultimos.join('');
     };
 
-    const mostrarMensaje = (texto) => {
+  // Muestra un toast corto en la parte inferior
+  const mostrarMensaje = (texto) => {
       toast.textContent = texto;
       toast.classList.add('visible');
       setTimeout(() => toast.classList.remove('visible'), 2400);
     };
 
-    const obtenerProgreso = async () => {
+  // Consulta el progreso del usuario en el backend
+  const obtenerProgreso = async () => {
       if (!userEmail) {
         mostrarMensaje('Inicia sesión para guardar tu progreso.');
         return;
@@ -460,7 +481,8 @@
       sincronizarEstado(data.progress);
     };
 
-    const completarReto = async (reto, boton) => {
+  // Marca un reto como completado y actualiza puntos
+  const completarReto = async (reto, boton) => {
       if (!userEmail) {
         mostrarMensaje('Inicia sesión para sumar puntos.');
         return;
@@ -486,6 +508,7 @@
         if (data.alreadyCompleted) {
           sincronizarEstado(data.progress);
           renderRetos();
+          renderPremios();
           actualizarResumen();
           mostrarMensaje('Ese reto ya estaba celebrado.');
           return;
@@ -493,6 +516,7 @@
 
         sincronizarEstado(data.progress);
         renderRetos();
+        renderPremios();
         actualizarResumen();
         mostrarMensaje(`Súper, sumaste ${reto.puntos} puntos`);
       } catch (error) {
@@ -503,7 +527,8 @@
       }
     };
 
-    const canjearPremio = async (premio, boton) => {
+  // Intenta canjear un premio verificando primero los puntos disponibles
+  const canjearPremio = async (premio, boton) => {
       if (!userEmail) {
         mostrarMensaje('Inicia sesión para canjear premios.');
         return;
@@ -548,7 +573,8 @@
       }
     };
 
-    const renderRetos = () => {
+  // Renderiza tarjetas de retos según sesión y disponibilidad
+  const renderRetos = () => {
       retosGrid.innerHTML = '';
       if (!userEmail) {
         RETOS.slice(0, RETO_BATCH_SIZE).forEach((reto) => {
@@ -595,7 +621,8 @@
       });
     };
 
-    const renderPremios = () => {
+  // Renderiza la lista de premios y ajusta los botones según los puntos
+  const renderPremios = () => {
       recompensasLista.innerHTML = '';
       PREMIOS.forEach((premio) => {
         const item = document.createElement('article');
@@ -616,6 +643,12 @@
           boton.disabled = true;
         } else {
           boton.classList.toggle('boton-desactivado', puntos < premio.costo);
+          boton.disabled = puntos < premio.costo;
+          if (puntos < premio.costo) {
+            boton.setAttribute('title', 'Aún necesitas más puntos para este premio');
+          } else {
+            boton.removeAttribute('title');
+          }
           boton.addEventListener('click', () => canjearPremio(premio, boton));
         }
 
@@ -623,7 +656,8 @@
       });
     };
 
-    const iniciar = async () => {
+  // Inicializa la vista cargando progreso y pintando los listados
+  const iniciar = async () => {
       renderPremios();
 
       try {
